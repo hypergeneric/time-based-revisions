@@ -1,0 +1,89 @@
+
+/****
+**** Admin bar icon styling
+****/
+
+
+/****
+**** General styling
+****/
+#admin-view {
+	padding: 40px;
+	max-width: 800px;
+}
+#admin-view-form .field {
+	margin-bottom: 1.5rem;
+}
+
+#admin-view-form .field input {
+	width: 550px;
+}
+
+
+#crtbrWrapper {
+	background-color: white;
+	position: relative;
+	width: 100%;
+	border-radius: 5px;
+	margin: 0;
+}
+	#crtbrWrapper * {
+		box-sizing: border-box;
+	}
+	#crtbrWrapper .content__wrapper {
+		padding: 3rem;
+	}
+		#crtbrWrapper .content__wrapper .field label {
+			font-weight: 700;
+			font-size: 16px;
+			padding-bottom: 10px;
+			display: inline-block;
+		}
+		#crtbrWrapper input[type='number'] ,
+		#crtbrWrapper input[type='text'] {
+			width: 100%;
+			padding: 10px;	
+		}
+		#crtbrWrapper .text-color {
+			color: #46a1de;
+			transition-duration: 0.2s;
+		}
+	#crtbrWrapper .field {
+	}
+		#crtbrWrapper .field input {
+			border: 1px #ddd solid;
+			border-radius: 0;
+			background: #fff;
+			box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.03);
+		}
+	#crtbrWrapper .checkbox {
+		display: flex;
+		flex-wrap: wrap;
+		margin-bottom: 30px;
+	}
+		#crtbrWrapper .checkbox .check {
+			width: 42px;
+			border: 1px #ddd solid;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background: #fff;
+			box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.03);
+		}
+			#crtbrWrapper .checkbox .check input {
+				margin: 0;
+			}
+		#crtbrWrapper .checkbox .label {
+			border: 1px #ddd solid;
+			width: calc( 100% - 42px);
+			border-left: none;
+			font-size: large;
+			font-weight: bold;
+			padding: 10px 15px;
+			background: #fff;
+			box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.03);
+			height: auto !important;
+		}
+		#crtbrWrapper .desc {
+			margin-top: 7px;
+		}
