@@ -1,5 +1,6 @@
 === Time-based Revision Cleanup for WordPress ===
 
+Donate link: https://www.paypal.com/donate/?hosted_button_id=EUHE8NXYEXJJ6  
 Contributors: michaelsablone  
 Tags: revisions, cleanup, optimize, performance, history, content management  
 Requires at least: 4.9  
