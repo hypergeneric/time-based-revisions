@@ -1,11 +1,12 @@
 === Time-based Revision Cleanup for WordPress ===
-Contributors: michaelsablone
-Tags: revisions, cleanup, optimize, performance, history, content management
-Requires at least: 4.9
-Tested up to: 6.4.3
-Requires PHP: 7.4
-Stable tag: 1.0.0
-License: GPLv2 or later
+
+Contributors: michaelsablone  
+Tags: revisions, cleanup, optimize, performance, history, content management  
+Requires at least: 4.9  
+Tested up to: 6.4.3  
+Requires PHP: 7.4  
+Stable tag: 1.0.0  
+License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Maximize WordPress efficiency with Time-based Revision Cleanup: manage post histories by age, not count, with optional auto-cleanups.
