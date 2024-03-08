@@ -8,7 +8,7 @@
  * Author URI:   https://compiledrogue.com
  * License:      GPL2 or later
  * License URI:  https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:  crtbr
+ * Text Domain:  time-based-revisions
  *
  * @package     TimeBasedRevisions
  * @author      Compiled Rogue

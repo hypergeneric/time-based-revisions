@@ -2,7 +2,7 @@
 
 Donate link: https://www.paypal.com/donate/?hosted_button_id=EUHE8NXYEXJJ6  
 Contributors: michaelsablone  
-Tags: revisions, cleanup, optimize, performance, history, content management  
+Tags: revisions, cleanup, optimize, performance, history 
 Requires at least: 4.9  
 Tested up to: 6.4.3  
 Requires PHP: 7.4  

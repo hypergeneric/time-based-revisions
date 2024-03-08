@@ -31,10 +31,12 @@ class CRTBR_Plugin {
 	 */
 	public static function uninstall() {
 		
-		global $wpdb;
-		
-		// kill the route entries in options
-		$wpdb->query( "DELETE FROM {$wpdb->options} WHERE `option_name` LIKE 'crtbr_%'" );
+		delete_option( 'crtbr_days_for_deletion' );
+		delete_option( 'crtbr_hours_for_cron' );
+		delete_option( 'crtbr_cron_enabled' );
+		delete_option( 'crtbr_cron_timeout' );
+		delete_option( 'crtbr_save_timeout' );
+		delete_option( 'crtbr_cron_maxrows' );
 
 	}
 	
@@ -84,7 +86,7 @@ class CRTBR_Plugin {
 		if ( $this->get_current_admin_url() == $this->get_admin_url() ) {
 			wp_register_style( 'crtbr_plugin_stylesheet', CRTBR_PLUGIN_DIR . 'admin/css/admin.css', [], CRTBR_VERSION );
 			wp_enqueue_style( 'crtbr_plugin_stylesheet' );
-			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js', array( 'jquery' ), CRTBR_VERSION );
+			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js', array( 'jquery' ), CRTBR_VERSION, false );
 			wp_localize_script( 'crtbr_script', 'crtbr_obj',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' )
@@ -105,8 +107,8 @@ class CRTBR_Plugin {
 	public function admin_page() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'Time-based Revisions', 'crtbr' ),
-			__( 'Time-based Revisions', 'crtbr' ),
+			__( 'Time-based Revisions', 'time-based-revisions' ),
+			__( 'Time-based Revisions', 'time-based-revisions' ),
 			'administrator',
 			CRTBR_DIRNAME,
 			array( $this, 'admin_page_settings' ),
