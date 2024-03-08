@@ -1,4 +1,4 @@
-=== Time-based Revision Cleanup for WordPress ===
+=== Time-based Revision Cleanup ===
 
 Donate link: https://www.paypal.com/donate/?hosted_button_id=EUHE8NXYEXJJ6  
 Contributors: michaelsablone  
