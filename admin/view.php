@@ -38,13 +38,13 @@ $save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
 					<?php endif; ?>
 					<div class="desc">
 						<?php
-							/* translators: %s: Hook name for wp_post_revisions_to_keep */
+							/* translators: 1: Hook name for wp_post_revisions_to_keep */
 							printf(
 								wp_kses(
-									__( 'If you\'re customizing revision limits per post type with the %s hook, these limits will be respected, but as maximums. Revisions older than your defined retention period will still be deleted, potentially reducing the actual number of revisions below your set limit.', 'time-based-revisions' ),
+									__( 'If you\'re customizing revision limits per post type with the %1$s hook, these limits will be respected, but as maximums. Revisions older than your defined retention period will still be deleted, potentially reducing the actual number of revisions below your set limit.', 'time-based-revisions' ),
 									array( 'code' => array() )
 								),
-								'<code>wp_{type}_revisions_to_keep</code>'
+								'<code>wp_post_revisions_to_keep</code>'
 							);
 						?>
 					</div>
