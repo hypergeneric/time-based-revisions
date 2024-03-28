@@ -11,14 +11,28 @@
 	padding: 40px;
 	max-width: 800px;
 }
-#admin-view-form .field {
-	margin-bottom: 1.5rem;
-}
+	#logo {
+		margin-bottom: 1.5rem;
+	}
+	#logo img {
+		display: block;
+		height: 70px;
+		width: auto;
+	}
+	#admin-view-form .field {
+		margin-bottom: 1.5rem;
+	}
 
-#admin-view-form .field input {
-	width: 550px;
+#crtbrWrapper .notify {
+	border: 1px #dc3545 solid;
+	padding: 1.5rem;
+	margin-bottom: 2rem;
+	border-radius: 10px;
+	background: #f8f8f8;
 }
-
+	#crtbrWrapper .notify h2 {
+		margin: 0 0 1rem;
+	}
 
 #crtbrWrapper {
 	background-color: white;
@@ -87,3 +101,12 @@
 		#crtbrWrapper .desc {
 			margin-top: 7px;
 		}
+
+@media (max-width: 782px ) {
+	#admin-view {
+		padding: 20px;
+	}
+	#crtbrWrapper .content__wrapper {
+		padding: 2rem;
+	}
+}

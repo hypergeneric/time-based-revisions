@@ -96,15 +96,18 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		/**
 		 * set_revisions_to_max
 		 *
-		 * Override the existing revisions number.  If it's set to true ( all revisions ), give the biggest number PHP can use instead.
-		 * Otherwise, use the revision number set.
+		 * Override the existing revisions number unless the post type doesn't support revisions.
 		 *
 		 * @param   string $num The revision number from wp-config.
 		 * @param   string $post The incoming post from the page save event.
 		 * @return  void
 		 */
 		function set_revisions_to_max ( $num, $post ) {
-			return $num == -1 ? PHP_INT_MAX : $num;
+			$num = -1;
+			if ( ! post_type_supports( $post->post_type, 'revisions' ) ) {
+				$num = 0;
+			}
+			return $num;
 		}
 
 		/**
@@ -140,8 +143,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		/**
 		 * save_cleanup
 		 *
-		 * Override the existing revisions number.  If it's set to true ( all revisions ), give the biggest number PHP can use instead.
-		 * Otherwise, use the revision number set.
+		 * Perform the on-save cleanup hook from WP's revision function.
 		 *
 		 * @param   array $revisions The revisions array coming from the original revision event. See wp-includes/revision.php "wp_save_post_revision_revisions_before_deletion"
 		 * @return  array
@@ -158,6 +160,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 * The main function for deleting old revisions.  Finds revisions X days old, then deletes them.
 		 *
 		 * @param   array $revisions The revisions array of posts to delete.
+		 * @param   array $limit The maximum time for this function to run
 		 * @return  array Returns any posts that are younger than the deletion window.  This will get passed back to the normal revision cycle and wordpress will do it's normal stuff.
 		 */
 		function delete_revisions ( $revisions, $limit=15 ) {

@@ -11,13 +11,38 @@ $save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
 ?>
 <div id="admin-view">
 
-	<h1><?php esc_html_e( 'Time-based Revisions', 'time-based-revisions' ); ?></h1>
+	<div id="logo"><img src="<?php echo esc_url( CRTBR_PLUGIN_DIR . 'admin/img/logo.png' ); ?>"></div>
 	
 	<form id="admin-view-form" autocomplete="off">
 		
 		<section id="crtbrWrapper">
 
 			<div class="content__wrapper">
+
+				<div class="notify">
+					<h2><?php esc_html_e( 'Notice', 'time-based-revisions' ); ?></h2>
+					<?php if ( defined( 'WP_POST_REVISIONS' ) && is_numeric( WP_POST_REVISIONS ) ) : ?>
+					<div class="desc">
+						<?php printf(
+							wp_kses(
+								__( 'To ensure optimal functionality of time-based revisions, the %s setting of %s in your wp-config.php is being overridden to allow unlimited revisions for all posts that support them. This change ensures that our age-based cleanup operates as expected.', 'time-based-revisions' ),
+								array( 'code' => array() )
+							),
+							'<code>WP_POST_REVISIONS</code>',
+							'<code>5</code>'
+						); ?>
+					</div>
+					<?php endif; ?>
+					<div class="desc">
+						<?php printf(
+							wp_kses(
+								__( 'If you\'re customizing revision limits per post type with the %s hook, these limits will be respected, but as maximums. Revisions older than your defined retention period will still be deleted, potentially reducing the actual number of revisions below your set limit.', 'time-based-revisions' ),
+								array( 'code' => array() )
+							),
+							'<code>wp_{type}_revisions_to_keep</code>'
+						); ?>
+					</div>
+				</div>
 
 				<div class="field">
 					<label for="days_for_deletion"><?php esc_html_e( 'Revision Retention Period', 'time-based-revisions' ); ?></label><br>
