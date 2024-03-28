@@ -3,7 +3,7 @@
  * Plugin Name:  Time-based Revisions
  * Plugin URI:   https://compiledrogue.com/
  * Description:  Maximize WordPress efficiency with Time-based Revision Cleanup: manage post histories by age, not count, with optional auto-cleanups.
- * Version:      1.0.0
+ * Version:      1.0.2
  * Author:       Compiled Rogue
  * Author URI:   https://compiledrogue.com
  * License:      GPL2 or later
@@ -22,17 +22,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/classes/crtbr-plugin.php';
 require_once __DIR__ . '/classes/crtbr-admin-panel.php';
 require_once __DIR__ . '/classes/crtbr-options.php';
+require_once __DIR__ . '/classes/crtbr-logs.php';
 
 if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 
 	class TimeBasedRevisions {
 		
 		/** @var string The plugin version number. */
-		var $version = '1.0.0';
+		var $version = '1.0.2';
 		
 		/** @var string Shortcuts. */
 		var $plugin;
 		var $options;
+		var $logs;
 		
 		/**
 		 * __construct
@@ -69,6 +71,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 			// Do all the plugin stuff.
 			$this->plugin    = new CRTBR_Plugin();
 			$this->options   = new CRTBR_Options();
+			$this->logs      = new CRTBR_Logs();
 
 			if ( is_admin() ) {
 				// load up our admin classes
@@ -79,7 +82,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 
 			// hook into existing revision filters
 			add_filter( 'wp_revisions_to_keep', array( $this, 'set_revisions_to_max' ), CRTBR_ACTION_PRIORITY, 2 );
-			add_filter( 'wp_save_post_revision_revisions_before_deletion', array( $this, 'save_cleanup' ), CRTBR_ACTION_PRIORITY, 1 );
+			add_filter( 'wp_save_post_revision_revisions_before_deletion', array( $this, 'save_cleanup' ), CRTBR_ACTION_PRIORITY, 2 );
 
 			// setup CRON
 			$hours_for_cron = crtbr()->options()->get( 'hours_for_cron', 1 );
@@ -103,7 +106,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 * @return  void
 		 */
 		function set_revisions_to_max ( $num, $post ) {
-			$num = -1;
+			$num = PHP_INT_MAX;
 			if ( ! post_type_supports( $post->post_type, 'revisions' ) ) {
 				$num = 0;
 			}
@@ -126,7 +129,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 			$cron_enabled = crtbr()->options()->get( 'cron_enabled' );
 			$cron_maxrows = crtbr()->options()->get( 'cron_maxrows', 50 );
 			if ( $cron_enabled ) {
-				crtbr()->log( "CRTBR CRON Running" );
+				crtbr()->log( "CRON Cleanup Started" );
 				$args = array(
 					'order'       => 'ASC',
 					'orderby'     => 'date ID',
@@ -135,7 +138,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 					'numberposts' => $cron_maxrows,
 				);
 				$revisions = get_posts( $args );
-				crtbr()->log( "CRTBR Found Posts:" . count( $revisions ) );
+				crtbr()->log( "Found Posts:" . count( $revisions ) );
 				crtbr()->delete_revisions( $revisions, $cron_timeout );
 			}
 		}
@@ -148,8 +151,8 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 * @param   array $revisions The revisions array coming from the original revision event. See wp-includes/revision.php "wp_save_post_revision_revisions_before_deletion"
 		 * @return  array
 		 */
-		function save_cleanup ( $revisions ) {
-			crtbr()->log( "CRTBR Save Running" );
+		function save_cleanup ( $revisions, $postid ) {
+			crtbr()->log( "Save Cleanup Started for post ID " . $postid );
 			$save_timeout = crtbr()->options()->get( 'save_timeout', 15 );
 			return crtbr()->delete_revisions( $revisions, $save_timeout );
 		}
@@ -165,6 +168,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 */
 		function delete_revisions ( $revisions, $limit=15 ) {
 			$days_for_deletion = crtbr()->options()->get( 'days_for_deletion', 365 );
+			$count             = 0;
 			$delete            = [];
 			$keep              = [];
 			$start             = microtime( true );
@@ -178,14 +182,16 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 				}
 			}
 			for ( $i = 0; isset( $delete[ $i ] ); $i++ ) {
-				crtbr()->log( "CRTBR deleting post " . $delete[ $i ]->ID );
+				crtbr()->log( "Deleting Revision " . $delete[ $i ]->ID );
 				wp_delete_post_revision( $delete[ $i ]->ID );
+				$count += 1;
 				$elapsed = microtime( true ) - $start;
 				if ( $elapsed >= $limit ) {
-					crtbr()->log( "CRTBR exiting delete at " . $elapsed );
+					crtbr()->log( "Deleting stopped at " . $elapsed );
 					break;
 				}
 			}
+			crtbr()->log( "Total deleted this run: " . $count );
 			return $keep;
 		}
 		
@@ -225,13 +231,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 * @return  void
 		 */
 		function log( $log ) {
-			if ( defined( 'CRTBR_DEBUG' ) && CRTBR_DEBUG && WP_DEBUG ) {
-				if ( is_array( $log ) || is_object( $log ) ) {
-					error_log( print_r( $log, true ) );
-				} else {
-					error_log( $log );
-				}
-			}
+			crtbr()->logs()->log( $log );
 		}
 		
 	}

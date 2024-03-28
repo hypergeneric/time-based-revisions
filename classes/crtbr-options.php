@@ -15,44 +15,6 @@ class CRTBR_Options {
 	}
 	
 	/**
-	 * getpostmeta
-	 *
-	 * Sugar function to save post meta.
-	 *
-	 * @param   int $id The post id.
-	 * @param   string $name The meta name.
-	 * @return  mixed The meta value
-	 */
-	public function getpostmeta( $id, $name, $default=null ) {
-		if ( isset( $this->lookup[$id] ) ) {
-			if ( isset( $this->lookup[$id][$name] ) ) {
-				return $this->lookup[$id][$name];
-			}
-		}
-		$value = get_post_meta( $id, 'crtbr_' . $name, true );
-		return $value ? $value : $default;
-	}
-	
-	/**
-	 * setpostmeta
-	 *
-	 * Sugar function to save post meta.
-	 *
-	 * @param   int $id The post id.
-	 * @param   string $name The meta name.
-	 * @param   mixed $value The meta value.
-	 * @return  void
-	 */
-	public function setpostmeta( $id, $name, $value ) {
-		if ( isset( $this->lookup[$id] ) ) {
-			if ( isset( $this->lookup[$id][$name] ) ) {
-				unset( $this->lookup[$id][$name] );
-			}
-		}
-		update_post_meta( $id, 'crtbr_' . $name, $value );
-	}
-	
-	/**
 	 * get
 	 *
 	 * Sugar function to save options meta.

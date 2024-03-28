@@ -2,11 +2,11 @@
 
 Donate link: https://www.paypal.com/donate/?hosted_button_id=EUHE8NXYEXJJ6  
 Contributors: michaelsablone  
-Tags: revisions, cleanup, optimize, performance, history 
+Tags: revisions, cleanup, optimize, performance, history
 Requires at least: 4.9  
 Tested up to: 6.4.3  
 Requires PHP: 7.4  
-Stable tag: 1.0.0  
+Stable tag: 1.0.2  
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -25,11 +25,10 @@ Key Features:
 
 By focusing on time rather than revision count, our plugin addresses the core flaw in the default system, ensuring that a busy day of editing won't result in the loss of important historical data. With the optional CRON job for hands-free maintenance, and adjustable settings for precision control, the Time-based Revision Cleanup plugin is an essential tool for maintaining a healthy, efficient WordPress site.
 
-== Screenshots ==
-
-1. Plugin options in the Admin.
-
 == Changelog ==
+
+= 1.0.2 =
+Added logging.
 
 = 1.0.0 =
 Initial release.
