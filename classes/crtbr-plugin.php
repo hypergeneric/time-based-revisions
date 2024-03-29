@@ -1,7 +1,11 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 class CRTBR_Plugin {
-	
+
 	/**
 	 * install
 	 *
@@ -12,13 +16,7 @@ class CRTBR_Plugin {
 	 */
 	public static function install() {
 
-		update_option( 'crtbr_days_for_deletion', 365 );
-		update_option( 'crtbr_hours_for_cron', 1 );
-		update_option( 'crtbr_cron_enabled', false );
-		update_option( 'crtbr_enable_logging', false );
-		update_option( 'crtbr_cron_timeout', 30 );
-		update_option( 'crtbr_save_timeout', 15 );
-		update_option( 'crtbr_cron_maxrows', 50 );
+		crtbr()->options()->save_defaults();
 
 	}
 
@@ -32,41 +30,10 @@ class CRTBR_Plugin {
 	 */
 	public static function uninstall() {
 		
-		self::delete_plugin_files();
-		delete_option( 'crtbr_days_for_deletion' );
-		delete_option( 'crtbr_hours_for_cron' );
-		delete_option( 'crtbr_cron_enabled' );
-		delete_option( 'crtbr_enable_logging' );
-		delete_option( 'crtbr_cron_timeout' );
-		delete_option( 'crtbr_save_timeout' );
-		delete_option( 'crtbr_cron_maxrows' );
+		crtbr()->options()->delete_defaults();
+		crtbr()->logs()->delete();
+		wp_clear_scheduled_hook( 'crtbr_cron_cleanup' );
 
-	}
-
-	/**
-	 * delete_plugin_files
-	 *
-	 * Recursively delete folder of files for the plugin
-	 *
-	 * @param   array $links The links array.
-	 * @return  array The links array.
-	 */
-	public static function delete_plugin_files() {
-		$upload_dir              = wp_get_upload_dir();
-		$path_checker_cache_path = $upload_dir['basedir'] . '/time-based-revisions/';
-		// Check if the directory exists before proceeding
-		if ( is_dir( $path_checker_cache_path ) ) {
-			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator( $path_checker_cache_path, RecursiveDirectoryIterator::SKIP_DOTS ),
-				RecursiveIteratorIterator::CHILD_FIRST
-			);
-			foreach ( $files as $fileinfo ) {
-				$action = ( $fileinfo->isDir() ? 'rmdir' : 'unlink' );
-				$action( $fileinfo->getRealPath() );
-			}
-			// Remove the path_checker_cache directory itself
-			rmdir( $path_checker_cache_path );
-		}
 	}
 	
 	/**
@@ -115,6 +82,7 @@ class CRTBR_Plugin {
 		if ( $this->get_current_admin_url() == $this->get_admin_url() ) {
 			wp_register_style( 'crtbr_plugin_stylesheet', CRTBR_PLUGIN_DIR . 'admin/css/admin.css', [], CRTBR_VERSION );
 			wp_enqueue_style( 'crtbr_plugin_stylesheet' );
+			wp_enqueue_script( 'crtbr_script_gcharts', 'https://www.gstatic.com/charts/loader.js', array(), CRTBR_VERSION, false );
 			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js', array( 'jquery' ), CRTBR_VERSION, false );
 			wp_localize_script( 'crtbr_script', 'crtbr_obj',
 				array(

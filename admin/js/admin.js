@@ -121,6 +121,66 @@
 			return false;
 		} );
 
+		// charting
+
+		var chart_data = 0;
+		
+		function drawChart() {
+			$( '#chart' ).removeClass( 'loading' );
+			var rows = [];
+			for ( var key in chart_data ) {
+				if ( Object.hasOwnProperty.call( chart_data, key ) ) {
+					var value    = chart_data[key];
+					var key_bits = key.split( '-' );
+					if ( key_bits.length == 4 ) {
+						var hour = key_bits.pop();
+						key = key_bits.join( '-' ) + " " + hour + ":00:00";
+					}
+					rows.push( [new Date( key ), value ] );
+				}
+			}
+			console.log(rows);
+			var data = new google.visualization.DataTable();
+			data.addColumn( 'date', 'Date' );
+			data.addColumn( 'number', 'Total' );
+			data.addRows( rows );
+			var options = {
+				chart: {
+					title: $( "#chart-timespan option:selected" ).text()
+				},
+				height: 250,
+				legend: { position: 'none' },
+				colors: ["#000000"],
+			};
+			var chart = new google.charts.Line( document.getElementById( 'chart_div' ) );
+			chart.draw( data, google.charts.Line.convertOptions( options ) );
+		}
+
+		function loadChart () {
+			google.charts.load( 'current', { 'packages':[ 'line' ] } );
+			google.charts.setOnLoadCallback( drawChart );
+		}
+
+		function loadChartData () {
+			$( '#chart' ).addClass( 'loading' );
+			$( '#chart_div' ).empty();
+			$.ajax( {
+				method: 'POST',
+				url: ajaxURL,
+				cache: false,
+				data:{
+					action: 'crtbr_get_stats_data',
+					timespan: $( '#chart-timespan' ).val()
+				},
+				success: function( response ) {
+					chart_data = response.data;
+					loadChart();
+				}
+			} );
+		}
+
+		crtbradmin.find( '#chart-timespan' ).change( loadChartData );
+
 		// tabs
 		var tabs         = crtbradmin.find( '.tabs > li' );
 		var tabs_content = crtbradmin.find( '.tab__content > li' );
@@ -138,6 +198,8 @@
 			window.location.hash = hash;
 			if ( hash == 'log' ) {
 				getLogData();
+			} else if ( hash == 'stats' ) {
+				loadChartData();
 			}
 		}
 		

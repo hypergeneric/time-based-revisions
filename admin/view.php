@@ -1,13 +1,19 @@
 <?php
 
 // pull the options
-$hours_for_cron    = crtbr()->options()->get( 'hours_for_cron', 1 );
-$days_for_deletion = crtbr()->options()->get( 'days_for_deletion', 365 );
-$cron_enabled      = crtbr()->options()->get( 'cron_enabled', false );
-$enable_logging    = crtbr()->options()->get( 'enable_logging'. false );
-$cron_timeout      = crtbr()->options()->get( 'cron_timeout', 30 );
-$cron_maxrows      = crtbr()->options()->get( 'cron_maxrows', 50 );
-$save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
+$hours_for_cron    = crtbr()->options()->get( 'hours_for_cron' );
+$days_for_deletion = crtbr()->options()->get( 'days_for_deletion' );
+$cron_enabled      = crtbr()->options()->get( 'cron_enabled' );
+$enable_logging    = crtbr()->options()->get( 'enable_logging' );
+$cron_timeout      = crtbr()->options()->get( 'cron_timeout' );
+$cron_maxrows      = crtbr()->options()->get( 'cron_maxrows' );
+$save_timeout      = crtbr()->options()->get( 'save_timeout' );
+$stats             = crtbr()->options()->get( 'stats' );
+$stats_total       = 0;
+
+foreach ( $stats as $key => $value ) {
+	$stats_total += $value;
+}
 
 ?>
 <div id="admin-view">
@@ -19,12 +25,31 @@ $save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
 		<section id="crtbrWrapper">
 
 			<ul class="tabs">
+				<li data-tab="stats"><?php esc_html_e( 'Stats', 'static-request-handler' ); ?></li>
 				<li data-tab="settings"><?php esc_html_e( 'Settings', 'static-request-handler' ); ?></li>
 				<?php if ( $cron_enabled == true ) : ?><li data-tab="cron"><?php esc_html_e( 'CRON', 'static-request-handler' ); ?></li><?php endif; ?>
 				<?php if ( $enable_logging == true ) : ?><li data-tab="log"><?php esc_html_e( 'Log', 'static-request-handler' ); ?></li><?php endif; ?>
 			</ul>
 
 			<ul class="tab__content">
+
+				<li id="tab-stats">
+					<div class="content__wrapper">
+					
+						<h1><?php esc_html_e( 'Total Revisions Cleaned', 'time-based-revisions' ); ?>: <?php echo $stats_total; ?></h1>
+						<select id="chart-timespan">
+							<option value="last-24h" selected><?php esc_html_e( 'Last 24 Hours', 'time-based-revisions' ); ?></option>
+							<option value="last-30d"><?php esc_html_e( 'Last 30 Days', 'time-based-revisions' ); ?></option>
+							<option value="last-60d"><?php esc_html_e( 'Last 60 Days', 'time-based-revisions' ); ?></option>
+							<option value="last-1y"><?php esc_html_e( 'Year to date', 'time-based-revisions' ); ?></option>
+						</select>
+						<div id="chart" class="ajax-group">
+							<div class="screen" style="background-image: url( <?php echo esc_url( get_admin_url() . 'images/loading.gif' ); ?> );"></div>
+							<div id="chart_div"></div>
+						</div>
+
+					</div>
+				</li>
 
 				<li id="tab-settings">
 
@@ -35,9 +60,9 @@ $save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
 							<?php if ( defined( 'WP_POST_REVISIONS' ) && is_numeric( WP_POST_REVISIONS ) ) : ?>
 							<div class="desc">
 								<?php 
-									/* translators: 1: Code tag for the WP_POST_REVISIONS setting, 2: The number of revisions currently set in wp-config.php */
 									printf(
 										wp_kses(
+											/* translators: 1: Code tag for the WP_POST_REVISIONS setting, 2: The number of revisions currently set in wp-config.php */
 											__( 'To ensure optimal functionality of time-based revisions, the %1$s setting of %2$s in your wp-config.php is being overridden to allow unlimited revisions for all posts that support them. This change ensures that our age-based cleanup operates as expected.', 'time-based-revisions' ),
 											array( 'code' => array() )
 										),
@@ -49,9 +74,9 @@ $save_timeout      = crtbr()->options()->get( 'save_timeout', 15 );
 							<?php endif; ?>
 							<div class="desc">
 								<?php
-									/* translators: 1: Hook name for wp_post_revisions_to_keep */
 									printf(
 										wp_kses(
+											/* translators: 1: Hook name for wp_post_revisions_to_keep */
 											__( 'If you\'re customizing revision limits per post type with the %1$s hook, these limits will be respected, but as maximums. Revisions older than your defined retention period will still be deleted, potentially reducing the actual number of revisions below your set limit.', 'time-based-revisions' ),
 											array( 'code' => array() )
 										),

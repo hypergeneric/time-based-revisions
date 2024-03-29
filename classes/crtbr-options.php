@@ -1,6 +1,22 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 class CRTBR_Options {
+
+	/** @var array Default option values. */
+	public $defaults = [
+		'days_for_deletion' => 365,
+		'hours_for_cron'    => 1,
+		'cron_enabled'      => false,
+		'enable_logging'    => false,
+		'cron_timeout'      => 30,
+		'save_timeout'      => 15,
+		'cron_maxrows'      => 50,
+		'stats'             => [],
+	];
 	
 	/** @var string Local array to store lookups. */
 	var $lookup = [];
@@ -12,6 +28,34 @@ class CRTBR_Options {
 	 * @return  void
 	 */
 	public function __construct() {
+	}
+
+	/**
+	 * save_defaults
+	 *
+	 * Save the option defaults to the DB
+	 *
+	 * @param   void
+	 * @return  void
+	 */
+	public function save_defaults() {
+		foreach ( $this->defaults as $key => $value ) {
+			$this->set( $key, $value );
+		}
+	}
+
+	/**
+	 * delete_defaults
+	 *
+	 * Delete the option defaults from the DB
+	 *
+	 * @param   void
+	 * @return  void
+	 */
+	public function delete_defaults() {
+		foreach ( $this->defaults as $key => $value ) {
+			delete_option( 'crtbr_' . $key );
+		}
 	}
 	
 	/**
@@ -26,6 +70,7 @@ class CRTBR_Options {
 		if ( isset( $this->lookup[$name] ) ) {
 			return $this->lookup[$name];
 		}
+		$default = isset( $this->defaults[$name] ) ? $this->defaults[$name] : $default;
 		$value = get_option( 'crtbr_' . $name );
 		return $value ? $value : $default;
 	}
@@ -40,7 +85,7 @@ class CRTBR_Options {
 	 * @param   boolean $autoload Autoload setting.
 	 * @return  void
 	 */
-	public function set( $name, $value, $autoload=true ) {
+	public function set( $name, $value, $autoload=false ) {
 		if ( isset( $this->lookup[$name] ) ) {
 			unset( $this->lookup[$name] );
 		}

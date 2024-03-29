@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 class CRTBR_Logs {
 
 	/**
@@ -16,13 +20,28 @@ class CRTBR_Logs {
 	 *
 	 * Output logging to the debug.
 	 *
-	 * @return  void
+	 * @return  array
 	*/
 	function clear() {
 		$upload_info = wp_get_upload_dir();
 		$data_dir    = $upload_info['basedir'] . "/time-based-revisions/";
 		file_put_contents( $data_dir . "log.txt", '' );
 		return [ "index" => 0, "count" => 20, "max" => 0, 'rows' => [] ];
+	}
+
+	/**
+	 * clear
+	 *
+	 * Output logging to the debug.
+	 *
+	 * @return  void
+	*/
+	function delete() {
+		$upload_info = wp_get_upload_dir();
+		$log_file    = $upload_info['basedir'] . "/time-based-revisions/log.txt";
+		if ( file_exists( $log_file ) ) {
+			unlink( $log_file );
+		}
 	}
 
 	/**

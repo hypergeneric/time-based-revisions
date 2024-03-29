@@ -237,6 +237,23 @@
 		margin-left: 1rem;
 	}
 
+#tab-stats {
+}
+	#tab-stats h1 {
+		margin: 0 0 2rem 0;
+	}
+	#tab-stats #chart-timespan {
+		margin-bottom: 1rem;
+	}
+	#tab-stats #chart_div {
+		border: 1px solid #ddd;
+		box-shadow: 3px 3px 0px 0px rgba(0,0,0,0.03);
+		width: 100%;
+		overflow: hidden;
+		padding: 20px;
+		min-height: 290px;
+	}
+
 @media (max-width: 782px ) {
 	#admin-view {
 		padding: 20px;
