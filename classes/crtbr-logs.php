@@ -40,7 +40,7 @@ class CRTBR_Logs {
 		$upload_info = wp_get_upload_dir();
 		$log_file    = $upload_info['basedir'] . "/time-based-revisions/log.txt";
 		if ( file_exists( $log_file ) ) {
-			unlink( $log_file );
+			wp_delete_file( $log_file );
 		}
 	}
 

@@ -36,7 +36,7 @@ foreach ( $stats as $key => $value ) {
 				<li id="tab-stats">
 					<div class="content__wrapper">
 					
-						<h1><?php esc_html_e( 'Total Revisions Cleaned', 'time-based-revisions' ); ?>: <?php echo $stats_total; ?></h1>
+						<h1><?php esc_html_e( 'Total Revisions Cleaned', 'time-based-revisions' ); ?>: <?php echo esc_html( $stats_total ); ?></h1>
 						<select id="chart-timespan">
 							<option value="last-24h" selected><?php esc_html_e( 'Last 24 Hours', 'time-based-revisions' ); ?></option>
 							<option value="last-30d"><?php esc_html_e( 'Last 30 Days', 'time-based-revisions' ); ?></option>

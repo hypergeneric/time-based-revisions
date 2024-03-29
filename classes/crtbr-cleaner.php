@@ -141,7 +141,7 @@ class CRTBR_Cleaner {
 	 */
 	function update_stats () {
 		$crtbr_stats = crtbr()->options()->get( 'stats' );
-		$date_key = date( "Y-m-d-H" );
+		$date_key = gmdate( "Y-m-d-H" );
 		if ( ! isset( $crtbr_stats[$date_key] ) ) {
 			$crtbr_stats[$date_key] = 0;
 		}
