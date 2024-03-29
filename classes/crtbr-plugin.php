@@ -82,7 +82,6 @@ class CRTBR_Plugin {
 		if ( $this->get_current_admin_url() == $this->get_admin_url() ) {
 			wp_register_style( 'crtbr_plugin_stylesheet', CRTBR_PLUGIN_DIR . 'admin/css/admin.css', [], CRTBR_VERSION );
 			wp_enqueue_style( 'crtbr_plugin_stylesheet' );
-			wp_enqueue_script( 'crtbr_script_gcharts', 'https://www.gstatic.com/charts/loader.js', array(), CRTBR_VERSION, false );
 			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js', array( 'jquery' ), CRTBR_VERSION, false );
 			wp_localize_script( 'crtbr_script', 'crtbr_obj',
 				array(

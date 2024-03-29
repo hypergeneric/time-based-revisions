@@ -16,6 +16,7 @@ foreach ( $stats as $key => $value ) {
 }
 
 ?>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="admin-view">
 
 	<div id="logo"><img src="<?php echo esc_url( CRTBR_PLUGIN_DIR . 'admin/img/logo.png' ); ?>"></div>
