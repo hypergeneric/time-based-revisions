@@ -45,11 +45,17 @@
 		// logs
 
 		var logs_page = 0;
+		var logs_pages = 0;
 
 		function createLogTable ( data ) {
-			crtbradmin.find( '.logs-prev' ).prop( "disabled", logs_page == 0 );
-			crtbradmin.find( '.logs-next' ).prop( "disabled", data.index + data.count >= data.max );
-			crtbradmin.find( '#logs .meta' ).text( "Page " + ( logs_page + 1 ) + " of " + ( Math.floor( data.max / data.count ) + 1 ) );
+			logs_pages = data.max == 0 ? 0 : Math.floor( data.max / data.count );
+			console.log(logs_pages);
+			crtbradmin.find( '.logs-start' ).prop( "disabled", logs_pages == 0 || logs_page == 0 );
+			crtbradmin.find( '.logs-prev' ).prop( "disabled", logs_pages == 0 || logs_page == 0 );
+			crtbradmin.find( '.logs-next' ).prop( "disabled", logs_pages == 0 || data.index + data.count >= data.max );
+			crtbradmin.find( '.logs-end' ).prop( "disabled", logs_pages == 0 || logs_page == logs_pages );
+			crtbradmin.find( '#logs .meta .page-index' ).text( logs_page + 1 );
+			crtbradmin.find( '#logs .meta .page-count' ).text( logs_pages + 1 );
 			crtbradmin.find( '#logs tbody tr:not( .seed )' ).remove();
 			var seed = crtbradmin.find( '#logs tbody tr.seed' );
 			for ( var i = 0; i < data.rows.length; i++ ) {
@@ -81,25 +87,35 @@
 		}
 
 		crtbradmin.find( '.logs-clear' ).click( function( e ) {
-			$( '#logs' ).addClass( 'loading' );
-			$.ajax( {
-				method: 'POST',
-				url: ajaxURL,
-				cache: false,
-				data:{
-					action: 'crtbr_logs_clear'
-				},
-				success: function( response ) {
-					$( '#logs' ).removeClass( 'loading' );
-					createLogTable( response.data );
-				}
-			} );
+			if ( confirm( $( this ).data( 'confirm' ) ) == true ) {
+				$( '#logs' ).addClass( 'loading' );
+				$.ajax( {
+					method: 'POST',
+					url: ajaxURL,
+					cache: false,
+					data:{
+						action: 'crtbr_logs_clear'
+					},
+					success: function( response ) {
+						$( '#logs' ).removeClass( 'loading' );
+						createLogTable( response.data );
+					}
+				} );
+			}
 			e.preventDefault();
 			return false;
 		} );
 
 		crtbradmin.find( '.logs-refresh' ).click( function( e ) {
 			$( '#logs' ).addClass( 'loading' );
+			getLogData();
+			e.preventDefault();
+			return false;
+		} );
+
+		crtbradmin.find( '.logs-start' ).click( function( e ) {
+			$( '#logs' ).addClass( 'loading' );
+			logs_page = 0;
 			getLogData();
 			e.preventDefault();
 			return false;
@@ -116,6 +132,14 @@
 		crtbradmin.find( '.logs-next' ).click( function( e ) {
 			$( '#logs' ).addClass( 'loading' );
 			logs_page += 1;
+			getLogData();
+			e.preventDefault();
+			return false;
+		} );
+
+		crtbradmin.find( '.logs-end' ).click( function( e ) {
+			$( '#logs' ).addClass( 'loading' );
+			logs_page = logs_pages;
 			getLogData();
 			e.preventDefault();
 			return false;

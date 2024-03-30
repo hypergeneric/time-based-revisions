@@ -65,7 +65,7 @@ foreach ( $stats as $key => $value ) {
 										wp_kses(
 											/* translators: 1: Code tag for the WP_POST_REVISIONS setting, 2: The number of revisions currently set in wp-config.php */
 											__( 'To ensure optimal functionality of time-based revisions, the %1$s setting of %2$s in your wp-config.php is being overridden to allow unlimited revisions for all posts that support them. This change ensures that our age-based cleanup operates as expected.', 'time-based-revisions' ),
-											array( 'code' => array() )
+											[ 'code' => [] ]
 										),
 										'<code>WP_POST_REVISIONS</code>',
 										'<code>5</code>'
@@ -79,7 +79,7 @@ foreach ( $stats as $key => $value ) {
 										wp_kses(
 											/* translators: 1: Hook name for wp_post_revisions_to_keep */
 											__( 'If you\'re customizing revision limits per post type with the %1$s hook, these limits will be respected, but as maximums. Revisions older than your defined retention period will still be deleted, potentially reducing the actual number of revisions below your set limit.', 'time-based-revisions' ),
-											array( 'code' => array() )
+											[ 'code' => [] ]
 										),
 										'<code>wp_post_revisions_to_keep</code>'
 									);
@@ -184,30 +184,24 @@ foreach ( $stats as $key => $value ) {
 
 							<table>
 								<thead>
-									<th class="time" colspan="1">
-										<span class='handle'><?php esc_html_e( 'Time', 'static-request-handler' ); ?></span>
-									</th>
-									<th colspan="1">
-										<span class='handle'><?php esc_html_e( 'Log', 'static-request-handler' ); ?></span>
-									</th>
+									<th class="time" colspan="1"><span class='handle'><?php esc_html_e( 'Time', 'static-request-handler' ); ?></span></th>
+									<th colspan="1"><span class='handle'><?php esc_html_e( 'Log', 'static-request-handler' ); ?></span></th>
 								</thead>
 								<tbody>
 									<tr class="seed">
-										<td class="time" >
-											<span class='timestamp'></span>
-										</td>
-										<td>
-											<span class='logdata'></span>
-										</td>
+										<td class="time"><span class='timestamp'></span></td>
+										<td><span class='logdata'></span></td>
 									</tr>
 								</tbody>
 							</table>
 
-							<button class="button logs-clear"><?php esc_html_e( 'Clear', 'static-request-handler' ); ?></button>
-							<button class="button logs-refresh"><?php esc_html_e( 'Refresh', 'static-request-handler' ); ?></button>
-							<button class="button button-primary logs-prev"><?php esc_html_e( 'Prev', 'static-request-handler' ); ?></button>
-							<button class="button button-primary logs-next"><?php esc_html_e( 'Next', 'static-request-handler' ); ?></button>
-							<span class="meta"></span>
+							<button class="button logs-clear" data-confirm="<?php esc_attr_e( 'Are you sure?  This will delete all log data permanently.', 'static-request-handler' ); ?>"><?php esc_html_e( 'Clear', 'static-request-handler' ); ?></button>
+							<button class="button logs-refresh" title="<?php esc_attr_e( 'Refresh', 'static-request-handler' ); ?>">&#10226;</button>
+							<button disabled class="button button-primary logs-start" title="<?php esc_attr_e( 'Rewind', 'static-request-handler' ); ?>">&#171;</button>
+							<button disabled class="button button-primary logs-prev" title="<?php esc_attr_e( 'Previous', 'static-request-handler' ); ?>">&#8249;</button>
+							<button disabled class="button button-primary logs-next" title="<?php esc_attr_e( 'Next', 'static-request-handler' ); ?>">&#8250;</button>
+							<button disabled class="button button-primary logs-end" title="<?php esc_attr_e( 'Forward', 'static-request-handler' ); ?>">&#187;</button>
+							<span class="meta"><?php esc_html_e( 'Page', 'static-request-handler' ); ?> <span class="page-index"></span> <?php esc_html_e( 'of', 'static-request-handler' ); ?> <span class="page-count"></span></span>
 						
 						</div>
 						

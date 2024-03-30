@@ -44,14 +44,14 @@ class CRTBR_Plugin {
 	 */
 	public function __construct() {
 		
-		register_uninstall_hook( CRTBR_FILE, array( __CLASS__, 'uninstall' ) );
-		register_deactivation_hook( CRTBR_FILE, array( __CLASS__, 'uninstall' ) );
-		register_activation_hook( CRTBR_FILE, array( __CLASS__, 'install' ) );
+		register_uninstall_hook( CRTBR_FILE, [ __CLASS__, 'uninstall' ] );
+		register_deactivation_hook( CRTBR_FILE, [ __CLASS__, 'uninstall' ] );
+		register_activation_hook( CRTBR_FILE, [ __CLASS__, 'install' ] );
 		
 		if ( is_admin() ) {
-			add_filter( 'plugin_action_links_' . CRTBR_BASENAME . '/time-based-revisions.php', array( $this, 'add_settings_link' ) );
-			add_action( 'admin_init', array( $this, 'admin_init' ) );
-			add_action( 'admin_menu', array( $this, 'admin_page' ) );
+			add_filter( 'plugin_action_links_' . CRTBR_BASENAME . '/time-based-revisions.php', [ $this, 'add_settings_link' ] );
+			add_action( 'admin_init', [ $this, 'admin_init' ] );
+			add_action( 'admin_menu', [ $this, 'admin_page' ] );
 		}
 		
 	}
@@ -82,12 +82,8 @@ class CRTBR_Plugin {
 		if ( $this->get_current_admin_url() == $this->get_admin_url() ) {
 			wp_register_style( 'crtbr_plugin_stylesheet', CRTBR_PLUGIN_DIR . 'admin/css/admin.css', [], CRTBR_VERSION );
 			wp_enqueue_style( 'crtbr_plugin_stylesheet' );
-			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js', array( 'jquery' ), CRTBR_VERSION, false );
-			wp_localize_script( 'crtbr_script', 'crtbr_obj',
-				array(
-					'ajax_url' => admin_url( 'admin-ajax.php' )
-				)
-			);
+			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js',[ 'jquery' ], CRTBR_VERSION, false );
+			wp_localize_script( 'crtbr_script', 'crtbr_obj', [ 'ajax_url' => admin_url( 'admin-ajax.php' ) ] );
 			wp_enqueue_script( 'crtbr_script' );
 		}
 	}
@@ -107,7 +103,7 @@ class CRTBR_Plugin {
 			__( 'Time-based Revisions', 'time-based-revisions' ),
 			'administrator',
 			CRTBR_DIRNAME,
-			array( $this, 'admin_page_settings' ),
+			[ $this, 'admin_page_settings' ],
 			100
 		);
 	}
@@ -138,7 +134,7 @@ class CRTBR_Plugin {
 		if ( ! $uri ) {
 			return '';
 		}
-		return remove_query_arg( array( '_wpnonce' ), admin_url( $uri ) );
+		return remove_query_arg( [ '_wpnonce' ], admin_url( $uri ) );
 	}
 	
 	/**

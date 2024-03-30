@@ -23,10 +23,8 @@ class CRTBR_Logs {
 	 * @return  array
 	*/
 	function clear() {
-		$upload_info = wp_get_upload_dir();
-		$data_dir    = $upload_info['basedir'] . "/time-based-revisions/";
-		file_put_contents( $data_dir . "log.txt", '' );
-		return [ "index" => 0, "count" => 20, "max" => 0, 'rows' => [] ];
+		$this->delete();
+		return $this->get_logs();
 	}
 
 	/**
@@ -38,9 +36,9 @@ class CRTBR_Logs {
 	*/
 	function delete() {
 		$upload_info = wp_get_upload_dir();
-		$log_file    = $upload_info['basedir'] . "/time-based-revisions/log.txt";
-		if ( file_exists( $log_file ) ) {
-			wp_delete_file( $log_file );
+		$logfile     = $upload_info['basedir'] . "/time-based-revisions/log.txt";
+		if ( file_exists( $logfile ) ) {
+			wp_delete_file( $logfile );
 		}
 	}
 
@@ -77,22 +75,25 @@ class CRTBR_Logs {
 	 */
 	public function get_logs( $page=0 ) {
 		$upload_info = wp_get_upload_dir();
-		$rows        = [];
 		$logfile     = $upload_info['basedir'] . "/time-based-revisions/log.txt";
 		$row_count   = 20;
 		$start       = $page * $row_count;
-		$file        = new SplFileObject( $logfile );
-		$file->seek( $start );
-		for ( $i=0; $i < $row_count; $i++ ) {
-			$line = $file->current();
-			if ( $line ) {
-				$data = explode( ',', $line );
-				$rows[] = [ $data[0], $data[1] ];
-				$file->next();
+		$max         = 0;
+		$rows        = [];
+		if ( file_exists( $logfile ) ) {
+			$file = new SplFileObject( $logfile );
+			$file->seek( $start );
+			for ( $i=0; $i < $row_count; $i++ ) {
+				$line = $file->current();
+				if ( $line ) {
+					$data = explode( ',', $line );
+					$rows[] = [ $data[0], $data[1] ];
+					$file->next();
+				}
 			}
+			$file->seek( PHP_INT_MAX );
+			$max = $file->key();
 		}
-		$file->seek( PHP_INT_MAX );
-		$max = $file->key();
 		return [ "index" => $start, "count" => $row_count, "max" => $max, 'rows' => $rows ];
 	}
 

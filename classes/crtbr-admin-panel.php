@@ -14,10 +14,10 @@ class CRTBR_AdminPanel {
 	 */
 	public function __construct() {
 		if ( is_admin() ) {
-			add_action( 'wp_ajax_crtbr_save_admin_page', array( $this, 'save_admin_page' ) );
-			add_action( 'wp_ajax_crtbr_logs_get_page', array( $this, 'logs_get_page' ) );
-			add_action( 'wp_ajax_crtbr_logs_clear', array( $this, 'logs_clear' ) );
-			add_action( 'wp_ajax_crtbr_get_stats_data', array( $this, 'get_stats_data' ) );
+			add_action( 'wp_ajax_crtbr_save_admin_page', [ $this, 'save_admin_page' ] );
+			add_action( 'wp_ajax_crtbr_logs_get_page', [ $this, 'logs_get_page' ] );
+			add_action( 'wp_ajax_crtbr_logs_clear', [ $this, 'logs_clear' ] );
+			add_action( 'wp_ajax_crtbr_get_stats_data', [ $this, 'get_stats_data' ] );
 		}
 	}
 

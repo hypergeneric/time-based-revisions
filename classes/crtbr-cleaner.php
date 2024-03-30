@@ -15,14 +15,14 @@ class CRTBR_Cleaner {
 	public function __construct() {
 
 		// hook into existing revision filters
-		add_filter( 'wp_revisions_to_keep', array( $this, 'set_revisions_to_max' ), CRTBR_ACTION_PRIORITY, 2 );
-		add_filter( 'wp_save_post_revision_revisions_before_deletion', array( $this, 'save_cleanup' ), CRTBR_ACTION_PRIORITY, 2 );
+		add_filter( 'wp_revisions_to_keep', [ $this, 'set_revisions_to_max' ], CRTBR_ACTION_PRIORITY, 2 );
+		add_filter( 'wp_save_post_revision_revisions_before_deletion', [ $this, 'save_cleanup' ], CRTBR_ACTION_PRIORITY, 2 );
 
 		// setup CRON
 		$hours_for_cron = crtbr()->options()->get( 'hours_for_cron' );
 		$cron_enabled   = crtbr()->options()->get( 'cron_enabled' );
 		if ( $cron_enabled ) {
-			add_action( 'crtbr_cron_cleanup', array( $this, 'cron_cleanup' ) );
+			add_action( 'crtbr_cron_cleanup', [ $this, 'cron_cleanup' ] );
 			if ( ! wp_next_scheduled( 'crtbr_cron_cleanup' ) ) {
 				wp_schedule_single_event( time() + ( $hours_for_cron * 60 * 60 ), 'crtbr_cron_cleanup' );
 			}
@@ -64,13 +64,13 @@ class CRTBR_Cleaner {
 		$cron_maxrows = crtbr()->options()->get( 'cron_maxrows' );
 		if ( $cron_enabled ) {
 			crtbr()->log( "CRON Cleanup Started" );
-			$args = array(
+			$args = [
 				'order'       => 'ASC',
 				'orderby'     => 'date ID',
 				'post_type'   => 'revision',
 				'post_status' => 'inherit',
 				'numberposts' => $cron_maxrows,
-			);
+			];
 			$revisions = get_posts( $args );
 			crtbr()->log( "Found Posts:" . count( $revisions ) );
 			crtbr()->cleaner()->delete_revisions( $revisions, $cron_timeout );
