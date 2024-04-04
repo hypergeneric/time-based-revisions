@@ -49,7 +49,6 @@
 
 		function createLogTable ( data ) {
 			logs_pages = data.max == 0 ? 0 : Math.floor( data.max / data.count );
-			console.log(logs_pages);
 			crtbradmin.find( '.logs-start' ).prop( "disabled", logs_pages == 0 || logs_page == 0 );
 			crtbradmin.find( '.logs-prev' ).prop( "disabled", logs_pages == 0 || logs_page == 0 );
 			crtbradmin.find( '.logs-next' ).prop( "disabled", logs_pages == 0 || data.index + data.count >= data.max );

@@ -26,10 +26,10 @@ foreach ( $stats as $key => $value ) {
 		<section id="crtbrWrapper">
 
 			<ul class="tabs">
-				<li data-tab="stats"><?php esc_html_e( 'Stats', 'static-request-handler' ); ?></li>
-				<li data-tab="settings"><?php esc_html_e( 'Settings', 'static-request-handler' ); ?></li>
-				<?php if ( $cron_enabled == true ) : ?><li data-tab="cron"><?php esc_html_e( 'CRON', 'static-request-handler' ); ?></li><?php endif; ?>
-				<?php if ( $enable_logging == true ) : ?><li data-tab="log"><?php esc_html_e( 'Log', 'static-request-handler' ); ?></li><?php endif; ?>
+				<li data-tab="stats"><?php esc_html_e( 'Stats', 'time-based-revisions' ); ?></li>
+				<li data-tab="settings"><?php esc_html_e( 'Settings', 'time-based-revisions' ); ?></li>
+				<?php if ( $cron_enabled == true ) : ?><li data-tab="cron"><?php esc_html_e( 'CRON', 'time-based-revisions' ); ?></li><?php endif; ?>
+				<?php if ( $enable_logging == true ) : ?><li data-tab="log"><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></li><?php endif; ?>
 			</ul>
 
 			<ul class="tab__content">
@@ -184,8 +184,8 @@ foreach ( $stats as $key => $value ) {
 
 							<table>
 								<thead>
-									<th class="time" colspan="1"><span class='handle'><?php esc_html_e( 'Time', 'static-request-handler' ); ?></span></th>
-									<th colspan="1"><span class='handle'><?php esc_html_e( 'Log', 'static-request-handler' ); ?></span></th>
+									<th class="time" colspan="1"><span class='handle'><?php esc_html_e( 'Time', 'time-based-revisions' ); ?></span></th>
+									<th colspan="1"><span class='handle'><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></span></th>
 								</thead>
 								<tbody>
 									<tr class="seed">
@@ -195,13 +195,13 @@ foreach ( $stats as $key => $value ) {
 								</tbody>
 							</table>
 
-							<button class="button logs-clear" data-confirm="<?php esc_attr_e( 'Are you sure?  This will delete all log data permanently.', 'static-request-handler' ); ?>"><?php esc_html_e( 'Clear', 'static-request-handler' ); ?></button>
-							<button class="button logs-refresh" title="<?php esc_attr_e( 'Refresh', 'static-request-handler' ); ?>">&#10226;</button>
-							<button disabled class="button button-primary logs-start" title="<?php esc_attr_e( 'Rewind', 'static-request-handler' ); ?>">&#171;</button>
-							<button disabled class="button button-primary logs-prev" title="<?php esc_attr_e( 'Previous', 'static-request-handler' ); ?>">&#8249;</button>
-							<button disabled class="button button-primary logs-next" title="<?php esc_attr_e( 'Next', 'static-request-handler' ); ?>">&#8250;</button>
-							<button disabled class="button button-primary logs-end" title="<?php esc_attr_e( 'Forward', 'static-request-handler' ); ?>">&#187;</button>
-							<span class="meta"><?php esc_html_e( 'Page', 'static-request-handler' ); ?> <span class="page-index"></span> <?php esc_html_e( 'of', 'static-request-handler' ); ?> <span class="page-count"></span></span>
+							<button class="button logs-clear" data-confirm="<?php esc_attr_e( 'Are you sure?  This will delete all log data permanently.', 'time-based-revisions' ); ?>"><?php esc_html_e( 'Clear', 'time-based-revisions' ); ?></button>
+							<button class="button logs-refresh" title="<?php esc_attr_e( 'Refresh', 'time-based-revisions' ); ?>">&#10226;</button>
+							<button disabled class="button button-primary logs-start" title="<?php esc_attr_e( 'Rewind', 'time-based-revisions' ); ?>">&#171;</button>
+							<button disabled class="button button-primary logs-prev" title="<?php esc_attr_e( 'Previous', 'time-based-revisions' ); ?>">&#8249;</button>
+							<button disabled class="button button-primary logs-next" title="<?php esc_attr_e( 'Next', 'time-based-revisions' ); ?>">&#8250;</button>
+							<button disabled class="button button-primary logs-end" title="<?php esc_attr_e( 'Forward', 'time-based-revisions' ); ?>">&#187;</button>
+							<span class="meta"><?php esc_html_e( 'Page', 'time-based-revisions' ); ?> <span class="page-index"></span> <?php esc_html_e( 'of', 'time-based-revisions' ); ?> <span class="page-count"></span></span>
 						
 						</div>
 						
