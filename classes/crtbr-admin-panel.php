@@ -139,16 +139,17 @@ class CRTBR_AdminPanel {
 	public function save_admin_page() {
 		
 		$literals = [ 'days_for_deletion', 'hours_for_cron', 'cron_timeout', 'save_timeout', 'cron_maxrows' ];
-		$bools = [ 'cron_enabled', 'enable_logging' ];
+		$bools = [ 'cron_enabled', 'enable_logging', 'disable_save_clean' ];
 		
 		$post_clean = filter_input_array( INPUT_POST, [
-			'hours_for_cron'    => FILTER_SANITIZE_NUMBER_INT,
-			'days_for_deletion' => FILTER_SANITIZE_NUMBER_INT,
-			'cron_timeout'      => FILTER_SANITIZE_NUMBER_INT,
-			'cron_maxrows'      => FILTER_SANITIZE_NUMBER_INT,
-			'save_timeout'      => FILTER_SANITIZE_NUMBER_INT,
-			'cron_enabled'      => FILTER_VALIDATE_BOOLEAN,
-			'enable_logging'    => FILTER_VALIDATE_BOOLEAN,
+			'hours_for_cron'     => FILTER_SANITIZE_NUMBER_INT,
+			'days_for_deletion'  => FILTER_SANITIZE_NUMBER_INT,
+			'cron_timeout'       => FILTER_SANITIZE_NUMBER_INT,
+			'cron_maxrows'       => FILTER_SANITIZE_NUMBER_INT,
+			'save_timeout'       => FILTER_SANITIZE_NUMBER_INT,
+			'cron_enabled'       => FILTER_VALIDATE_BOOLEAN,
+			'enable_logging'     => FILTER_VALIDATE_BOOLEAN,
+			'disable_save_clean' => FILTER_VALIDATE_BOOLEAN,
 		] );
 		
 		foreach ( $literals as $key ) {

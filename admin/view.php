@@ -1,15 +1,16 @@
 <?php
 
 // pull the options
-$hours_for_cron    = crtbr()->options()->get( 'hours_for_cron' );
-$days_for_deletion = crtbr()->options()->get( 'days_for_deletion' );
-$cron_enabled      = crtbr()->options()->get( 'cron_enabled' );
-$enable_logging    = crtbr()->options()->get( 'enable_logging' );
-$cron_timeout      = crtbr()->options()->get( 'cron_timeout' );
-$cron_maxrows      = crtbr()->options()->get( 'cron_maxrows' );
-$save_timeout      = crtbr()->options()->get( 'save_timeout' );
-$stats             = crtbr()->options()->get( 'stats' );
-$stats_total       = 0;
+$hours_for_cron     = crtbr()->options()->get( 'hours_for_cron' );
+$days_for_deletion  = crtbr()->options()->get( 'days_for_deletion' );
+$disable_save_clean = crtbr()->options()->get( 'disable_save_clean' );
+$cron_enabled       = crtbr()->options()->get( 'cron_enabled' );
+$enable_logging     = crtbr()->options()->get( 'enable_logging' );
+$cron_timeout       = crtbr()->options()->get( 'cron_timeout' );
+$cron_maxrows       = crtbr()->options()->get( 'cron_maxrows' );
+$save_timeout       = crtbr()->options()->get( 'save_timeout' );
+$stats              = crtbr()->options()->get( 'stats' );
+$stats_total        = 0;
 
 foreach ( $stats as $key => $value ) {
 	$stats_total += $value;
@@ -118,6 +119,24 @@ foreach ( $stats as $key => $value ) {
 								<?php esc_html_e( 'Check this to activate the automated cleanup CRON schedule. When enabled, the plugin will periodically check and delete outdated revisions based on the settings below.', 'time-based-revisions' ); ?>
 							</div>
 						</div>
+
+						<?php if ( $cron_enabled == true ) : ?>
+						<div class="checkbox">
+							<div class="check">
+								<input type="checkbox" 
+									name="disable_save_clean" id="disable_save_clean" 
+									value="<?php echo esc_attr( $disable_save_clean ? 'true' : 'false' ); ?>" 
+									<?php if ( $disable_save_clean == true ) : ?>checked="checked"<?php endif; ?>
+								/>
+							</div>
+							<div class="label">
+								<label for="disable_save_clean"><?php esc_html_e( 'Disable Save-based Cleanup', 'time-based-revisions' ); ?></label>
+							</div>
+							<div class="desc">
+								<?php esc_html_e( 'Opt for resource efficiency during post updates by disabling the standard save-triggered revision cleanup. Enable this option to rely solely on scheduled CRON jobs for revision management.', 'time-based-revisions' ); ?>
+							</div>
+						</div>
+						<?php endif; ?>
 
 						<div class="checkbox">
 							<div class="check">

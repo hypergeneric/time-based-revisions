@@ -8,14 +8,16 @@ class CRTBR_Options {
 
 	/** @var array Default option values. */
 	public $defaults = [
-		'days_for_deletion' => 365,
-		'hours_for_cron'    => 1,
-		'cron_enabled'      => false,
-		'enable_logging'    => false,
-		'cron_timeout'      => 30,
-		'save_timeout'      => 15,
-		'cron_maxrows'      => 50,
-		'stats'             => [],
+		'days_for_deletion'  => 365,
+		'hours_for_cron'     => 1,
+		'disable_save_clean' => false,
+		'cron_enabled'       => false,
+		'enable_logging'     => false,
+		'cron_timeout'       => 30,
+		'save_timeout'       => 15,
+		'cron_maxrows'       => 50,
+		'revisions_to_skip'  => [],
+		'stats'              => [],
 	];
 	
 	/** @var string Local array to store lookups. */

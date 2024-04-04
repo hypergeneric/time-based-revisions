@@ -13,13 +13,14 @@
 			
 			e.preventDefault();
 
-			var hours_for_cron    = $( this ).find( '#hours_for_cron' ).val();
-			var days_for_deletion = $( this ).find( '#days_for_deletion' ).val();
-			var save_timeout      = $( this ).find( '#save_timeout' ).val();
-			var cron_timeout      = $( this ).find( '#cron_timeout' ).val();
-			var cron_maxrows      = $( this ).find( '#cron_maxrows' ).val();
-			var cron_enabled      = $( this ).find( '#cron_enabled' ).is( ':checked' );
-			var enable_logging    = $( this ).find( '#enable_logging' ).is( ':checked' );
+			var hours_for_cron     = $( this ).find( '#hours_for_cron' ).val();
+			var days_for_deletion  = $( this ).find( '#days_for_deletion' ).val();
+			var save_timeout       = $( this ).find( '#save_timeout' ).val();
+			var cron_timeout       = $( this ).find( '#cron_timeout' ).val();
+			var cron_maxrows       = $( this ).find( '#cron_maxrows' ).val();
+			var cron_enabled       = $( this ).find( '#cron_enabled' ).is( ':checked' );
+			var enable_logging     = $( this ).find( '#enable_logging' ).is( ':checked' );
+			var disable_save_clean = $( this ).find( '#disable_save_clean' ).is( ':checked' );
 
 			$.ajax( {
 				method: 'POST',
@@ -33,7 +34,8 @@
 					cron_timeout: cron_timeout,
 					cron_maxrows: cron_maxrows,
 					cron_enabled: cron_enabled,
-					enable_logging: enable_logging
+					enable_logging: enable_logging,
+					disable_save_clean: disable_save_clean
 				},
 				success: function( response ) {
 					location.reload();

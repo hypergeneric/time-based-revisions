@@ -59,9 +59,10 @@ class CRTBR_Cleaner {
 	 * @return  void
 	 */
 	function cron_cleanup () {
-		$cron_timeout = crtbr()->options()->get( 'cron_timeout' );
-		$cron_enabled = crtbr()->options()->get( 'cron_enabled' );
-		$cron_maxrows = crtbr()->options()->get( 'cron_maxrows' );
+		$cron_timeout      = crtbr()->options()->get( 'cron_timeout' );
+		$cron_enabled      = crtbr()->options()->get( 'cron_enabled' );
+		$cron_maxrows      = crtbr()->options()->get( 'cron_maxrows' );
+		$revisions_to_skip = crtbr()->options()->get( 'revisions_to_skip' );
 		if ( $cron_enabled ) {
 			crtbr()->log( "CRON Cleanup Started" );
 			$args = [
@@ -70,6 +71,7 @@ class CRTBR_Cleaner {
 				'post_type'   => 'revision',
 				'post_status' => 'inherit',
 				'numberposts' => $cron_maxrows,
+				'exclude'     => $revisions_to_skip,
 			];
 			$revisions = get_posts( $args );
 			crtbr()->log( "Found Posts:" . count( $revisions ) );
@@ -87,6 +89,10 @@ class CRTBR_Cleaner {
 	 * @return  array the remainining posts that were newer than the retention window
 	 */
 	function save_cleanup ( $revisions, $postid ) {
+		if ( crtbr()->options()->get( 'cron_enabled' ) && crtbr()->options()->get( 'disable_save_clean' ) ) {
+			crtbr()->log( "Skipping Cleanup for post ID " . $postid );
+			return [];
+		}
 		crtbr()->log( "Save Cleanup Started for post ID " . $postid );
 		$save_timeout = crtbr()->options()->get( 'save_timeout' );
 		return crtbr()->cleaner()->delete_revisions( $revisions, $save_timeout );
@@ -106,17 +112,39 @@ class CRTBR_Cleaner {
 		$count             = 0;
 		$delete            = [];
 		$keep              = [];
+		$skip              = [];
 		$start             = microtime( true );
+		// loop through each revision to determine if we're going to delete it, or keep it
 		foreach( $revisions as $revision ) {
 			$do_delete = strtotime( $revision->post_modified ) < strtotime( "-$days_for_deletion days" ) && strtotime( $revision->post_date ) < strtotime( "-$days_for_deletion days"  );
-			$do_delete = apply_filters( 'crtbr_delete_revision', $do_delete, $revision );
+			// if we're going to delete it, use a filter to see if we are going to override it
+			if ( $do_delete ) {
+				$do_delete = apply_filters( 'crtbr_delete_revision', $do_delete, $revision );
+				// if we're overriding the delete, let's add it to the skip array so we don't query it in the future
+				if ( ! $do_delete ) {
+					$skip[] = $revision;
+				}
+			}
 			if ( $do_delete ) {
 				$delete[] = $revision;
 			} else {
 				$keep[] = $revision;
 			}
 		}
-		for ( $i = 0; isset( $delete[ $i ] ); $i++ ) {
+		// if we have posts to skip, save the ID's so we don't query them in the future via the CRON
+		if ( count( $skip ) > 0 ) {
+			$revisions_to_skip = crtbr()->options()->get( 'revisions_to_skip' );
+			for ( $i=0; $i < count( $skip ); $i++ ) {
+				if ( ! in_array( $skip[ $i ]->ID, $revisions_to_skip ) ) {
+					crtbr()->log( "Saving " . $skip[ $i ]->ID . " to Revsision skip array" );
+					$revisions_to_skip[] = $skip[ $i ]->ID;
+				}
+			}
+			$revisions_to_skip = array_unique( $revisions_to_skip );
+			crtbr()->options()->set( 'revisions_to_skip', $revisions_to_skip );
+		}
+		// ok, run though as many deletes as possible before we hit our time limit
+		for ( $i = 0; $i < count( $delete ); $i++ ) {
 			crtbr()->log( "Deleting Revision " . $delete[ $i ]->ID );
 			wp_delete_post_revision( $delete[ $i ]->ID );
 			crtbr()->cleaner()->update_stats();
