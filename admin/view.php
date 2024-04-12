@@ -1,11 +1,14 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
+
 // pull the options
 $hours_for_cron     = crtbr()->options()->get( 'hours_for_cron' );
 $days_for_deletion  = crtbr()->options()->get( 'days_for_deletion' );
 $disable_save_clean = crtbr()->options()->get( 'disable_save_clean' );
 $cron_enabled       = crtbr()->options()->get( 'cron_enabled' );
-$enable_logging     = crtbr()->options()->get( 'enable_logging' );
 $cron_timeout       = crtbr()->options()->get( 'cron_timeout' );
 $cron_maxrows       = crtbr()->options()->get( 'cron_maxrows' );
 $save_timeout       = crtbr()->options()->get( 'save_timeout' );
@@ -17,7 +20,6 @@ foreach ( $stats as $key => $value ) {
 }
 
 ?>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <div id="admin-view">
 
 	<div id="logo"><img src="<?php echo esc_url( CRTBR_PLUGIN_DIR . 'admin/img/logo.png' ); ?>"></div>
@@ -30,7 +32,6 @@ foreach ( $stats as $key => $value ) {
 				<li data-tab="stats"><?php esc_html_e( 'Stats', 'time-based-revisions' ); ?></li>
 				<li data-tab="settings"><?php esc_html_e( 'Settings', 'time-based-revisions' ); ?></li>
 				<?php if ( $cron_enabled == true ) : ?><li data-tab="cron"><?php esc_html_e( 'CRON', 'time-based-revisions' ); ?></li><?php endif; ?>
-				<?php if ( $enable_logging == true ) : ?><li data-tab="log"><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></li><?php endif; ?>
 			</ul>
 
 			<ul class="tab__content">
@@ -137,22 +138,6 @@ foreach ( $stats as $key => $value ) {
 							</div>
 						</div>
 						<?php endif; ?>
-
-						<div class="checkbox">
-							<div class="check">
-								<input type="checkbox" 
-									name="enable_logging" id="enable_logging" 
-									value="<?php echo esc_attr( $enable_logging ? 'true' : 'false' ); ?>" 
-									<?php if ( $enable_logging == true ) : ?>checked="checked"<?php endif; ?>
-								/>
-							</div>
-							<div class="label">
-								<label for="enable_logging"><?php esc_html_e( 'Enable Logging', 'time-based-revisions' ); ?></label>
-							</div>
-							<div class="desc">
-								<?php esc_html_e( 'Log all actions taken by the revision cleanup.', 'time-based-revisions' ); ?>
-							</div>
-						</div>
 						
 						<input id="submitForm" class="button button-primary" name="submitForm" type="submit" value="<?php esc_attr_e( 'Save', 'time-based-revisions' ); ?>" />
 						
@@ -192,39 +177,6 @@ foreach ( $stats as $key => $value ) {
 						
 					</div>
 
-				</li>
-
-				<li id="tab-log">
-					<div class="content__wrapper">
-
-						<div id="logs" class="ajax-group">
-							
-							<div class="screen" style="background-image: url( <?php echo esc_url( get_admin_url() . 'images/loading.gif' ); ?> );"></div>
-
-							<table>
-								<thead>
-									<th class="time" colspan="1"><span class='handle'><?php esc_html_e( 'Time', 'time-based-revisions' ); ?></span></th>
-									<th colspan="1"><span class='handle'><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></span></th>
-								</thead>
-								<tbody>
-									<tr class="seed">
-										<td class="time"><span class='timestamp'></span></td>
-										<td><span class='logdata'></span></td>
-									</tr>
-								</tbody>
-							</table>
-
-							<button class="button logs-clear" data-confirm="<?php esc_attr_e( 'Are you sure?  This will delete all log data permanently.', 'time-based-revisions' ); ?>"><?php esc_html_e( 'Clear', 'time-based-revisions' ); ?></button>
-							<button class="button logs-refresh" title="<?php esc_attr_e( 'Refresh', 'time-based-revisions' ); ?>">&#10226;</button>
-							<button disabled class="button button-primary logs-start" title="<?php esc_attr_e( 'Rewind', 'time-based-revisions' ); ?>">&#171;</button>
-							<button disabled class="button button-primary logs-prev" title="<?php esc_attr_e( 'Previous', 'time-based-revisions' ); ?>">&#8249;</button>
-							<button disabled class="button button-primary logs-next" title="<?php esc_attr_e( 'Next', 'time-based-revisions' ); ?>">&#8250;</button>
-							<button disabled class="button button-primary logs-end" title="<?php esc_attr_e( 'Forward', 'time-based-revisions' ); ?>">&#187;</button>
-							<span class="meta"><?php esc_html_e( 'Page', 'time-based-revisions' ); ?> <span class="page-index"></span> <?php esc_html_e( 'of', 'time-based-revisions' ); ?> <span class="page-count"></span></span>
-						
-						</div>
-						
-					</div>
 				</li>
 
 			</ul>

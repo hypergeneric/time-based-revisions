@@ -3,7 +3,7 @@
  * Plugin Name:  Time-based Revisions
  * Plugin URI:   https://compiledrogue.com/
  * Description:  Maximize WordPress efficiency with Time-based Revision Cleanup: manage post histories by age, not count, with optional auto-cleanups.
- * Version:      1.0.7
+ * Version:      1.0.8
  * Author:       Compiled Rogue
  * Author URI:   https://compiledrogue.com
  * License:      GPL2 or later
@@ -22,7 +22,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/classes/crtbr-plugin.php';
 require_once __DIR__ . '/classes/crtbr-admin-panel.php';
 require_once __DIR__ . '/classes/crtbr-options.php';
-require_once __DIR__ . '/classes/crtbr-logs.php';
 require_once __DIR__ . '/classes/crtbr-cleaner.php';
 
 if ( ! class_exists( 'TimeBasedRevisions' ) ) :
@@ -30,12 +29,11 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 	class TimeBasedRevisions {
 		
 		/** @var string The plugin version number. */
-		var $version = '1.0.7';
+		var $version = '1.0.8';
 		
 		/** @var string Shortcuts. */
 		var $plugin;
 		var $options;
-		var $logs;
 		var $cleaner;
 		
 		/**
@@ -72,7 +70,6 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 			
 			// Do all the plugin stuff.
 			$this->options   = new CRTBR_Options();
-			$this->logs      = new CRTBR_Logs();
 			$this->plugin    = new CRTBR_Plugin();
 			$this->cleaner   = new CRTBR_Cleaner();
 
@@ -121,7 +118,12 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		 * @return  void
 		 */
 		function log( $log ) {
-			crtbr()->logs()->log( $log );
+			if ( is_array( $log ) || is_object( $log ) ) {
+				$log = print_r( $log, true );
+			}
+			if ( defined( 'CRTBR_DEBUG' ) && CRTBR_DEBUG && WP_DEBUG ) {
+				error_log( $log );
+			}
 		}
 		
 	}

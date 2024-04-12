@@ -12,7 +12,6 @@ class CRTBR_Options {
 		'hours_for_cron'     => 1,
 		'disable_save_clean' => false,
 		'cron_enabled'       => false,
-		'enable_logging'     => false,
 		'cron_timeout'       => 30,
 		'save_timeout'       => 15,
 		'cron_maxrows'       => 50,

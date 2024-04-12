@@ -162,7 +162,7 @@ class CRTBR_Cleaner {
 	/**
 	 * update_stats
 	 *
-	 * The function to log delete events.  Only called on a successful revision delete.
+	 * Get all the stats.
 	 *
 	 * @param   void
 	 * @return  void
