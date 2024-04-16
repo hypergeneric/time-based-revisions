@@ -18,15 +18,15 @@ Optimize your website's performance and streamline your editing workflow with th
 
 In addition, our plugin enhances the admin dashboard with an analytics feature that relies on Google's Chart API to generate visual representations of revision history data.
 
-Please note: The dashboard analytics feature of this plugin relies on a third-party service (Google's Chart API). For more information about this service, please visit the Google Chart Tools documentation. You can review the terms of service here.
+Please note: The dashboard analytics feature of this plugin relies on a third-party service (Google's Chart API). For more information about this service, please visit the [Google Chart Tools](https://developers.google.com/chart/) documentation. You can review the terms of service [here](https://developers.google.com/chart/terms).
 
-Key Features:
+### Key Features:
 
-* Intelligent Age-Based Management: Preserve your site's history by automatically deleting revisions past a certain age, keeping only the recent and relevant changes.
-* Seamless On-Save Cleanup: The plugin intuitively removes outdated revisions upon saving posts, based on the age criteria you've set, without disrupting the creative process.
-* Optional Automated Cleanup: Enable the optional CRON job to perform regular, site-wide revision cleanups at intervals you control, maintaining optimal database health with no manual effort.
-* Dashboard Analytics: Visualize your site's revision cleanup activity with an integrated chart, powered by Google's Chart API.
-* Fully Customizable: Configure the plugin's settings to fit the unique demands of your site, including save timeout, CRON frequency, and the maximum number of revisions to process.
+- **Intelligent Age-Based Management**: Preserve your site's history by automatically deleting revisions past a certain age, keeping only the recent and relevant changes.
+- **Seamless On-Save Cleanup**: The plugin intuitively removes outdated revisions upon saving posts, based on the age criteria you've set, without disrupting the creative process.
+- **Optional Automated Cleanup**: Enable the optional CRON job to perform regular, site-wide revision cleanups at intervals you control, maintaining optimal database health with no manual effort.
+- **Dashboard Analytics**: Visualize your site's revision cleanup activity with an integrated chart, powered by Google's Chart API.
+- **Fully Customizable**: Configure the plugin's settings to fit the unique demands of your site, including save timeout, CRON frequency, and the maximum number of revisions to process.
 
 By focusing on time rather than revision count, our plugin addresses the core flaw in the default system, ensuring that a busy day of editing won't result in the loss of important historical data. With the optional CRON job for hands-free maintenance, adjustable settings for precision control, and insightful analytics, the Time-based Revision Cleanup plugin is an essential tool for maintaining a healthy, efficient WordPress site.
 
