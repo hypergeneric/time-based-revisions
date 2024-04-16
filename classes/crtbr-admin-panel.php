@@ -15,6 +15,8 @@ class CRTBR_AdminPanel {
 	public function __construct() {
 		if ( is_admin() ) {
 			add_action( 'wp_ajax_crtbr_save_admin_page', [ $this, 'save_admin_page' ] );
+			add_action( 'wp_ajax_crtbr_logs_get_page', [ $this, 'logs_get_page' ] );
+			add_action( 'wp_ajax_crtbr_logs_clear', [ $this, 'logs_clear' ] );
 			add_action( 'wp_ajax_crtbr_get_stats_data', [ $this, 'get_stats_data' ] );
 		}
 	}
@@ -94,6 +96,37 @@ class CRTBR_AdminPanel {
 		wp_send_json_success( $chart_data );
 		
 	}
+
+	/**
+	 * logs_clear
+	 *
+	 * clear the log file.
+	 *
+	 * @param   void
+	 * @return  void
+	 */
+	public function logs_clear() {
+
+		wp_send_json_success( crtbr()->logs()->clear() );
+		
+	}
+
+	/**
+	 * logs_get_next
+	 *
+	 * get the next page of blocked logs.
+	 *
+	 * @param   void
+	 * @return  void
+	 */
+	public function logs_get_page() {
+
+		$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+		$rows = crtbr()->logs()->get_logs( $page );
+		
+		wp_send_json_success( $rows );
+		
+	}
 	
 	/**
 	 * save_admin_page
@@ -106,7 +139,7 @@ class CRTBR_AdminPanel {
 	public function save_admin_page() {
 		
 		$literals = [ 'days_for_deletion', 'hours_for_cron', 'cron_timeout', 'save_timeout', 'cron_maxrows' ];
-		$bools = [ 'cron_enabled', 'disable_save_clean' ];
+		$bools = [ 'cron_enabled', 'enable_logging', 'disable_save_clean' ];
 		
 		$post_clean = filter_input_array( INPUT_POST, [
 			'hours_for_cron'     => FILTER_SANITIZE_NUMBER_INT,
@@ -115,6 +148,7 @@ class CRTBR_AdminPanel {
 			'cron_maxrows'       => FILTER_SANITIZE_NUMBER_INT,
 			'save_timeout'       => FILTER_SANITIZE_NUMBER_INT,
 			'cron_enabled'       => FILTER_VALIDATE_BOOLEAN,
+			'enable_logging'     => FILTER_VALIDATE_BOOLEAN,
 			'disable_save_clean' => FILTER_VALIDATE_BOOLEAN,
 		] );
 		

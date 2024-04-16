@@ -9,11 +9,14 @@ $hours_for_cron     = crtbr()->options()->get( 'hours_for_cron' );
 $days_for_deletion  = crtbr()->options()->get( 'days_for_deletion' );
 $disable_save_clean = crtbr()->options()->get( 'disable_save_clean' );
 $cron_enabled       = crtbr()->options()->get( 'cron_enabled' );
+$enable_logging     = crtbr()->options()->get( 'enable_logging' );
 $cron_timeout       = crtbr()->options()->get( 'cron_timeout' );
 $cron_maxrows       = crtbr()->options()->get( 'cron_maxrows' );
 $save_timeout       = crtbr()->options()->get( 'save_timeout' );
 $stats              = crtbr()->options()->get( 'stats' );
 $stats_total        = 0;
+$upload_info        = wp_get_upload_dir();
+$logfile            = $upload_info['baseurl'] . "/time-based-revisions/log.txt";
 
 foreach ( $stats as $key => $value ) {
 	$stats_total += $value;
@@ -32,6 +35,7 @@ foreach ( $stats as $key => $value ) {
 				<li data-tab="stats"><?php esc_html_e( 'Stats', 'time-based-revisions' ); ?></li>
 				<li data-tab="settings"><?php esc_html_e( 'Settings', 'time-based-revisions' ); ?></li>
 				<?php if ( $cron_enabled == true ) : ?><li data-tab="cron"><?php esc_html_e( 'CRON', 'time-based-revisions' ); ?></li><?php endif; ?>
+				<?php if ( $enable_logging == true ) : ?><li data-tab="log"><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></li><?php endif; ?>
 			</ul>
 
 			<ul class="tab__content">
@@ -97,14 +101,6 @@ foreach ( $stats as $key => $value ) {
 							</div>
 						</div>
 
-						<div class="field">
-							<label for="save_timeout"><?php esc_html_e( 'Save Deletion Timeout', 'time-based-revisions' ); ?></label><br>
-							<input id="save_timeout" name="save_timeout" type="number" placeholder="<?php esc_attr_e( 'In Seconds', 'time-based-revisions' ); ?>" value="<?php echo esc_attr( $save_timeout ); ?>">
-							<div class="desc">
-								<?php esc_html_e( 'Specify the duration in seconds for the plugin to wait before timing out during the deletion of old revisions upon saving a post.', 'time-based-revisions' ); ?>
-							</div>
-						</div>
-								
 						<div class="checkbox">
 							<div class="check">
 								<input type="checkbox" 
@@ -117,11 +113,10 @@ foreach ( $stats as $key => $value ) {
 								<label for="cron_enabled"><?php esc_html_e( 'Enable Scheduled Cleanup', 'time-based-revisions' ); ?></label>
 							</div>
 							<div class="desc">
-								<?php esc_html_e( 'Check this to activate the automated cleanup CRON schedule. When enabled, the plugin will periodically check and delete outdated revisions based on the settings below.', 'time-based-revisions' ); ?>
+								<?php esc_html_e( 'Check this to activate the automated cleanup CRON schedule. When enabled, the plugin will periodically check and delete outdated revisions based on the settings in the CRON tab.', 'time-based-revisions' ); ?>
 							</div>
 						</div>
 
-						<?php if ( $cron_enabled == true ) : ?>
 						<div class="checkbox">
 							<div class="check">
 								<input type="checkbox" 
@@ -137,7 +132,30 @@ foreach ( $stats as $key => $value ) {
 								<?php esc_html_e( 'Opt for resource efficiency during post updates by disabling the standard save-triggered revision cleanup. Enable this option to rely solely on scheduled CRON jobs for revision management.', 'time-based-revisions' ); ?>
 							</div>
 						</div>
-						<?php endif; ?>
+
+						<div class="field">
+							<label for="save_timeout"><?php esc_html_e( 'Save Deletion Timeout', 'time-based-revisions' ); ?></label><br>
+							<input id="save_timeout" name="save_timeout" type="number" placeholder="<?php esc_attr_e( 'In Seconds', 'time-based-revisions' ); ?>" value="<?php echo esc_attr( $save_timeout ); ?>">
+							<div class="desc">
+								<?php esc_html_e( 'Specify the duration in seconds for the plugin to time out during the deletion of old revisions upon saving a post using the traditional save-based cleanup.', 'time-based-revisions' ); ?>
+							</div>
+						</div>
+
+						<div class="checkbox">
+							<div class="check">
+								<input type="checkbox" 
+									name="enable_logging" id="enable_logging" 
+									value="<?php echo esc_attr( $enable_logging ? 'true' : 'false' ); ?>" 
+									<?php if ( $enable_logging == true ) : ?>checked="checked"<?php endif; ?>
+								/>
+							</div>
+							<div class="label">
+								<label for="enable_logging"><?php esc_html_e( 'Enable Logging', 'time-based-revisions' ); ?></label>
+							</div>
+							<div class="desc">
+								<?php esc_html_e( 'Log all actions taken by the revision cleanup to a local file on the server, in the uploads folder.  Be advised: this log can grow very large, and is not hidden on the file system.  Proceed with caution.', 'time-based-revisions' ); ?>
+							</div>
+						</div>
 						
 						<input id="submitForm" class="button button-primary" name="submitForm" type="submit" value="<?php esc_attr_e( 'Save', 'time-based-revisions' ); ?>" />
 						
@@ -177,6 +195,40 @@ foreach ( $stats as $key => $value ) {
 						
 					</div>
 
+				</li>
+
+				<li id="tab-log">
+					<div class="content__wrapper">
+
+						<div id="logs" class="ajax-group">
+							
+							<div class="screen" style="background-image: url( <?php echo esc_url( get_admin_url() . 'images/loading.gif' ); ?> );"></div>
+
+							<table>
+								<thead>
+									<th class="time" colspan="1"><span class='handle'><?php esc_html_e( 'Time', 'time-based-revisions' ); ?></span></th>
+									<th colspan="1"><span class='handle'><?php esc_html_e( 'Log', 'time-based-revisions' ); ?></span></th>
+								</thead>
+								<tbody>
+									<tr class="seed">
+										<td class="time"><span class='timestamp'></span></td>
+										<td><span class='logdata'></span></td>
+									</tr>
+								</tbody>
+							</table>
+
+							<button class="button logs-clear" data-confirm="<?php esc_attr_e( 'Are you sure?  This will delete all log data permanently.', 'time-based-revisions' ); ?>"><?php esc_html_e( 'Clear', 'time-based-revisions' ); ?></button>
+							<a class="button logs-download" href="<?php echo esc_attr( $logfile ); ?>" target="_blank" title="<?php esc_attr_e( 'Download', 'time-based-revisions' ); ?>">&#10515;</a>
+							<button class="button logs-refresh" title="<?php esc_attr_e( 'Refresh', 'time-based-revisions' ); ?>">&#10226;</button>
+							<button disabled class="button button-primary logs-start" title="<?php esc_attr_e( 'Rewind', 'time-based-revisions' ); ?>">&#171;</button>
+							<button disabled class="button button-primary logs-prev" title="<?php esc_attr_e( 'Previous', 'time-based-revisions' ); ?>">&#8249;</button>
+							<button disabled class="button button-primary logs-next" title="<?php esc_attr_e( 'Next', 'time-based-revisions' ); ?>">&#8250;</button>
+							<button disabled class="button button-primary logs-end" title="<?php esc_attr_e( 'Forward', 'time-based-revisions' ); ?>">&#187;</button>
+							<span class="meta"><?php esc_html_e( 'Page', 'time-based-revisions' ); ?> <span class="page-index"></span> <?php esc_html_e( 'of', 'time-based-revisions' ); ?> <span class="page-count"></span></span>
+						
+						</div>
+						
+					</div>
 				</li>
 
 			</ul>

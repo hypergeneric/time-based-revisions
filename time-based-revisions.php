@@ -22,6 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/classes/crtbr-plugin.php';
 require_once __DIR__ . '/classes/crtbr-admin-panel.php';
 require_once __DIR__ . '/classes/crtbr-options.php';
+require_once __DIR__ . '/classes/crtbr-logs.php';
 require_once __DIR__ . '/classes/crtbr-cleaner.php';
 
 if ( ! class_exists( 'TimeBasedRevisions' ) ) :
@@ -34,6 +35,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 		/** @var string Shortcuts. */
 		var $plugin;
 		var $options;
+		var $logs;
 		var $cleaner;
 		
 		/**
@@ -70,6 +72,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 			
 			// Do all the plugin stuff.
 			$this->options   = new CRTBR_Options();
+			$this->logs      = new CRTBR_Logs();
 			$this->plugin    = new CRTBR_Plugin();
 			$this->cleaner   = new CRTBR_Cleaner();
 
@@ -124,6 +127,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 			if ( defined( 'CRTBR_DEBUG' ) && CRTBR_DEBUG && WP_DEBUG ) {
 				error_log( $log );
 			}
+			crtbr()->logs()->log( $log );
 		}
 		
 	}

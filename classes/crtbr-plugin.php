@@ -31,6 +31,7 @@ class CRTBR_Plugin {
 	public static function uninstall() {
 		
 		crtbr()->options()->delete_defaults();
+		crtbr()->logs()->delete();
 		wp_clear_scheduled_hook( 'crtbr_cron_cleanup' );
 
 	}

@@ -63,6 +63,7 @@ class CRTBR_Cleaner {
 		$cron_enabled      = crtbr()->options()->get( 'cron_enabled' );
 		$cron_maxrows      = crtbr()->options()->get( 'cron_maxrows' );
 		$revisions_to_skip = crtbr()->options()->get( 'revisions_to_skip' );
+		$days_for_deletion = crtbr()->options()->get( 'days_for_deletion' );
 		if ( $cron_enabled ) {
 			crtbr()->log( "CRON Cleanup Started" );
 			$args = [
@@ -72,10 +73,20 @@ class CRTBR_Cleaner {
 				'post_status' => 'inherit',
 				'numberposts' => $cron_maxrows,
 				'exclude'     => $revisions_to_skip,
+				'date_query'  => [
+					[
+						'column' => 'post_modified',
+						'before' => "$days_for_deletion days ago",
+					],
+				],
 			];
 			$revisions = get_posts( $args );
-			crtbr()->log( "Found Posts:" . count( $revisions ) );
-			crtbr()->cleaner()->delete_revisions( $revisions, $cron_timeout );
+			crtbr()->log( "Found Posts: " . count( $revisions ) );
+			if ( count( $revisions ) == 0 ) {
+				crtbr()->log( "Nothing to delete -- DB is clean!" );
+			} else {
+				crtbr()->cleaner()->delete_revisions( $revisions, $cron_timeout );
+			}
 		}
 	}
 
