@@ -6,7 +6,7 @@ Tags: revisions, cleanup, optimize, performance, history
 Requires at least: 4.9  
 Tested up to: 6.8.1  
 Requires PHP: 7.4  
-Stable tag: 1.1.2  
+Stable tag: 1.1.3  
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,7 @@ By focusing on time rather than revision count, our plugin addresses the core fl
 
 == Changelog ==
 
-= 1.1.2 =  
+= 1.1.3 =  
 Bump version number.
 
 = 1.1.1 =  
