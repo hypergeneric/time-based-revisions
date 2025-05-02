@@ -85,7 +85,7 @@ class CRTBR_Plugin {
 			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js',[ 'jquery' ], CRTBR_VERSION, false );
 			wp_localize_script( 'crtbr_script', 'crtbr_obj', [ 'ajax_url' => admin_url( 'admin-ajax.php' ) ] );
 			wp_enqueue_script( 'crtbr_script' );
-			wp_enqueue_script( 'crtbr-google-charts', "https://www.gstatic.com/charts/loader.js", [], CRTBR_VERSION, false );
+			wp_enqueue_script( 'craat_apexcharts', CRAAT_PLUGIN_DIR . 'admin/js/apexcharts.3.53.0.js', [], CRAAT_VERSION, false );
 		}
 	}
 	

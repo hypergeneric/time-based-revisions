@@ -149,10 +149,13 @@
 		// charting
 
 		var chart_data = 0;
-		
+		var chart;
+
 		function drawChart() {
-			$( '#chart' ).removeClass( 'loading' );
+			document.querySelector("#chart").classList.remove("loading");
+
 			var rows = [];
+
 			for ( var key in chart_data ) {
 				if ( Object.hasOwnProperty.call( chart_data, key ) ) {
 					var value    = chart_data[key];
@@ -164,30 +167,43 @@
 					rows.push( [new Date( key ), value ] );
 				}
 			}
-			var data = new google.visualization.DataTable();
-			data.addColumn( 'date', 'Date' );
-			data.addColumn( 'number', 'Total' );
-			data.addRows( rows );
+
+			// Check if the chart already exists and destroy it
+			if (typeof chart !== 'undefined' && chart !== null) {
+				chart.destroy(); // Destroy the existing chart before re-rendering
+			}
+
+			// Prepare ApexCharts options for the events chart
 			var options = {
 				chart: {
-					title: $( "#chart-timespan option:selected" ).text()
+					type: 'line',
+					height: 250,
+					toolbar: { show: false },
+					animations: { enabled: false },
 				},
-				height: 250,
-				legend: { position: 'none' },
-				colors: ["#000000"],
+				series: [{
+					name: 'Total',
+					data: rows
+				}],
+				xaxis: {
+					type: 'datetime'
+				},
+				colors: ['#000000'],
+				stroke: {
+					width: 2
+				},
+				legend: {
+					position: 'bottom'
+				},
 			};
-			var chart = new google.charts.Line( document.getElementById( 'chart_div' ) );
-			chart.draw( data, google.charts.Line.convertOptions( options ) );
-		}
 
-		function loadChart () {
-			google.charts.load( 'current', { 'packages':[ 'line' ] } );
-			google.charts.setOnLoadCallback( drawChart );
+			// Render the events chart in the specified div
+			chart = new ApexCharts(document.querySelector("#chart_div"), options);
+			chart.render();
 		}
 
 		function loadChartData () {
 			$( '#chart' ).addClass( 'loading' );
-			$( '#chart_div' ).empty();
 			$.ajax( {
 				method: 'POST',
 				url: ajaxURL,
@@ -198,7 +214,7 @@
 				},
 				success: function( response ) {
 					chart_data = response.data;
-					loadChart();
+					drawChart();
 				}
 			} );
 		}

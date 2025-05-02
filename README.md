@@ -4,9 +4,9 @@ Donate link: https://www.paypal.com/donate/?hosted_button_id=EUHE8NXYEXJJ6
 Contributors: michaelsablone  
 Tags: revisions, cleanup, optimize, performance, history  
 Requires at least: 4.9  
-Tested up to: 6.4.3  
+Tested up to: 6.8.1  
 Requires PHP: 7.4  
-Stable tag: 1.0.11  
+Stable tag: 1.1.0  
 License: GPLv2 or later  
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,9 +16,7 @@ Maximize WordPress efficiency with Time-based Revision Cleanup: manage post hist
 
 Optimize your website's performance and streamline your editing workflow with the Time-based Revision Cleanup plugin for WordPress. Our plugin offers a sophisticated solution to the limitations of the default number-based revision system, which can quickly become inadequate for active sites. Instead of restricting revisions to a set count, our plugin allows you to specify a timeframe for keeping revisions, such as 30, 60, or 365 days, ensuring that your database retains only what's necessary without losing the essential edit history of your posts.
 
-In addition, our plugin enhances the admin dashboard with an analytics feature that relies on Google's Chart API to generate visual representations of revision history data.
-
-Please note: The dashboard analytics feature of this plugin relies on a third-party service (Google's Chart API). For more information about this service, please visit the [Google Chart Tools](https://developers.google.com/chart/) documentation. You can review the terms of service [here](https://developers.google.com/chart/terms).
+In addition, our plugin enhances the admin dashboard with an analytics feature to generate visual representations of revision history data.
 
 ### Key Features:
 
@@ -30,7 +28,17 @@ Please note: The dashboard analytics feature of this plugin relies on a third-pa
 
 By focusing on time rather than revision count, our plugin addresses the core flaw in the default system, ensuring that a busy day of editing won't result in the loss of important historical data. With the optional CRON job for hands-free maintenance, adjustable settings for precision control, and insightful analytics, the Time-based Revision Cleanup plugin is an essential tool for maintaining a healthy, efficient WordPress site.
 
+== Screenshots ==
+
+1. The Stats tab showing you 24 hours / 30 days / 60 days / YTD statistics for the cleanup.
+2. The Settings tab showing all general settings for the plugin.
+3. The CRON setting tab for running the cleanup on schedule.
+
 == Changelog ==
+
+= 1.1.0 =  
+Change graphing to Apex charts to remove third party functionality.
+Added support for WordPress 6.8.
 
 = 1.0.11 =  
 Add static logging.
