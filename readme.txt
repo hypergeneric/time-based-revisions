@@ -5,7 +5,7 @@ Tags: post revisions, revision history, revision cleanup, database cleanup, revi
 Requires at least: 6.2
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -115,6 +115,9 @@ Your existing WordPress revisions remain in the database. Deactivation clears th
 3. Scheduled cleanup controls for the interval, execution-time limit, and maximum revisions processed per run.
 
 == Changelog ==
+
+= 1.1.6 =
+* Simplified the admin screen header to use the plugin name without a logo image.
 
 = 1.1.5 =
 * Secured admin AJAX requests with capability and nonce checks.

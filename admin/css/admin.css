@@ -11,13 +11,10 @@
 	padding: 40px;
 	max-width: 800px;
 }
-	#logo {
-		margin-bottom: 1.5rem;
-	}
-	#logo img {
-		display: block;
-		height: 70px;
-		width: auto;
+	#admin-view > h1 {
+		margin: 0 0 1.5rem;
+		font-size: 24px;
+		line-height: 1.2;
 	}
 	#admin-view-form .field {
 		margin-bottom: 1.5rem;

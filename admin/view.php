@@ -25,7 +25,7 @@ foreach ( $stats as $key => $value ) {
 ?>
 <div id="admin-view">
 
-	<div id="logo"><img src="<?php echo esc_url( CRTBR_PLUGIN_DIR . 'admin/img/logo.png' ); ?>"></div>
+	<h1><?php esc_html_e( 'Time-based Revision Cleanup', 'time-based-revisions' ); ?></h1>
 	
 	<form id="admin-view-form" autocomplete="off">
 		

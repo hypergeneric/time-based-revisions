@@ -107,6 +107,9 @@ Your existing WordPress revisions remain in the database. Deactivation clears th
 
 ## Changelog
 
+### 1.1.6
+* Simplified the admin screen header to use the plugin name without a logo image.
+
 ### 1.1.5
 * Secured admin AJAX requests with capability and nonce checks.
 * Added validation for cleanup settings and chart periods.
@@ -147,7 +150,7 @@ Your existing WordPress revisions remain in the database. Deactivation clears th
 | Requires WordPress | 6.2 or later |
 | Tested through | 7.1 |
 | Requires PHP | 7.4 or later |
-| Stable release | 1.1.5 |
+| Stable release | 1.1.6 |
 | License | [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html) |
 | Contributors | michaelsablone |
 | Directory tags | post revisions, revision history, revision cleanup, database cleanup, revision management |
