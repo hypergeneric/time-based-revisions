@@ -28,6 +28,10 @@ class CRTBR_Plugin {
 	 * @param   void
 	 * @return  void
 	 */
+	public static function deactivate() {
+		wp_clear_scheduled_hook( 'crtbr_cron_cleanup' );
+	}
+
 	public static function uninstall() {
 		
 		crtbr()->options()->delete_defaults();
@@ -45,7 +49,7 @@ class CRTBR_Plugin {
 	public function __construct() {
 		
 		register_uninstall_hook( CRTBR_FILE, [ __CLASS__, 'uninstall' ] );
-		register_deactivation_hook( CRTBR_FILE, [ __CLASS__, 'uninstall' ] );
+		register_deactivation_hook( CRTBR_FILE, [ __CLASS__, 'deactivate' ] );
 		register_activation_hook( CRTBR_FILE, [ __CLASS__, 'install' ] );
 		
 		if ( is_admin() ) {
@@ -65,7 +69,7 @@ class CRTBR_Plugin {
 	 * @return  array The links array.
 	 */
 	public function add_settings_link( $links ) {
-		$links[] = '<a href="' . $this->get_admin_url() . '">' . __( 'Settings' ) . '</a>';
+		$links[] = '<a href="' . $this->get_admin_url() . '">' . __( 'Settings', 'time-based-revisions' ) . '</a>';
 		return $links;
 	}
 	
@@ -83,9 +87,9 @@ class CRTBR_Plugin {
 			wp_register_style( 'crtbr_plugin_stylesheet', CRTBR_PLUGIN_DIR . 'admin/css/admin.css', [], CRTBR_VERSION );
 			wp_enqueue_style( 'crtbr_plugin_stylesheet' );
 			wp_register_script( 'crtbr_script', CRTBR_PLUGIN_DIR . 'admin/js/admin.js',[ 'jquery' ], CRTBR_VERSION, false );
-			wp_localize_script( 'crtbr_script', 'crtbr_obj', [ 'ajax_url' => admin_url( 'admin-ajax.php' ) ] );
+			wp_localize_script( 'crtbr_script', 'crtbr_obj', [ 'ajax_url' => admin_url( 'admin-ajax.php' ), 'nonce' => wp_create_nonce( 'crtbr_admin' ) ] );
 			wp_enqueue_script( 'crtbr_script' );
-			wp_enqueue_script( 'craat_apexcharts', CRTBR_PLUGIN_DIR . 'admin/js/apexcharts.3.53.0.js', [], CRTBR_VERSION, false );
+			wp_enqueue_script( 'crtbr_apexcharts', CRTBR_PLUGIN_DIR . 'admin/js/apexcharts.3.53.0.js', [], CRTBR_VERSION, false );
 		}
 	}
 	
@@ -100,10 +104,10 @@ class CRTBR_Plugin {
 	public function admin_page() {
 		add_submenu_page(
 			'options-general.php',
-			__( 'Time-based Revisions', 'time-based-revisions' ),
-			__( 'Time-based Revisions', 'time-based-revisions' ),
-			'administrator',
-			CRTBR_DIRNAME,
+			__( 'Time-based Revision Cleanup', 'time-based-revisions' ),
+			__( 'Time-based Revision Cleanup', 'time-based-revisions' ),
+			'manage_options',
+			CRTBR_BASENAME,
 			[ $this, 'admin_page_settings' ],
 			100
 		);
@@ -118,6 +122,9 @@ class CRTBR_Plugin {
 	 * @return  void
 	 */
 	public function admin_page_settings() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'Permission denied.', 'time-based-revisions' ) );
+		}
 		require_once CRTBR_DIRNAME . '/admin/view.php';
 	}
 	

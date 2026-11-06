@@ -27,6 +27,7 @@
 				url: ajaxURL,
 				cache: false,
 				data:{
+					nonce: crtbr_obj.nonce,
 					action: 'crtbr_save_admin_page',
 					hours_for_cron: hours_for_cron,
 					days_for_deletion: days_for_deletion,
@@ -38,7 +39,14 @@
 					disable_save_clean: disable_save_clean
 				},
 				success: function( response ) {
-					location.reload();
+					if ( response.success ) {
+						location.reload();
+					} else {
+						window.alert( response.data );
+					}
+				},
+				error: function( xhr ) {
+					window.alert( xhr.responseJSON ? xhr.responseJSON.data : 'Unable to save settings. Please reload and try again.' );
 				}
 			} );
 			
@@ -77,6 +85,7 @@
 				url: ajaxURL,
 				cache: false,
 				data:{
+					nonce: crtbr_obj.nonce,
 					page: logs_page,
 					action: 'crtbr_logs_get_page'
 				},
@@ -95,6 +104,7 @@
 					url: ajaxURL,
 					cache: false,
 					data:{
+					nonce: crtbr_obj.nonce,
 						action: 'crtbr_logs_clear'
 					},
 					success: function( response ) {
@@ -209,6 +219,7 @@
 				url: ajaxURL,
 				cache: false,
 				data:{
+					nonce: crtbr_obj.nonce,
 					action: 'crtbr_get_stats_data',
 					timespan: $( '#chart-timespan' ).val()
 				},

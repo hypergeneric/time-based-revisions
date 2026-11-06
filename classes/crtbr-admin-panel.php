@@ -30,9 +30,14 @@ class CRTBR_AdminPanel {
 	 * @return  void
 	 */
 	public function get_stats_data() {
+		$this->authorize_request();
+		check_ajax_referer( 'crtbr_admin', 'nonce' );
 
 		// set vars based on requested format
-		$timespan   = filter_input( INPUT_POST, 'timespan', FILTER_SANITIZE_STRING );
+		$timespan = isset( $_POST['timespan'] ) && is_string( $_POST['timespan'] ) ? sanitize_key( wp_unslash( $_POST['timespan'] ) ) : '';
+		if ( ! in_array( $timespan, [ 'last-24h', 'last-30d', 'last-60d', 'last-1y' ], true ) ) {
+			wp_send_json_error( 'Invalid timespan.', 400 );
+		}
 		switch ( $timespan ) {
 			case 'last-24h':
 				$date_format       = 'Y-m-d-H';
@@ -106,6 +111,8 @@ class CRTBR_AdminPanel {
 	 * @return  void
 	 */
 	public function logs_clear() {
+		$this->authorize_request();
+		check_ajax_referer( 'crtbr_admin', 'nonce' );
 
 		wp_send_json_success( crtbr()->logs()->clear() );
 		
@@ -120,8 +127,10 @@ class CRTBR_AdminPanel {
 	 * @return  void
 	 */
 	public function logs_get_page() {
+		$this->authorize_request();
+		check_ajax_referer( 'crtbr_admin', 'nonce' );
 
-		$page = filter_input( INPUT_POST, 'page', FILTER_VALIDATE_INT );
+		$page = isset( $_POST['page'] ) && is_scalar( $_POST['page'] ) ? max( 0, intval( wp_unslash( $_POST['page'] ) ) ) : 0;
 		$rows = crtbr()->logs()->get_logs( $page );
 		
 		wp_send_json_success( $rows );
@@ -136,34 +145,45 @@ class CRTBR_AdminPanel {
 	 * @param   void
 	 * @return  void
 	 */
+	private function authorize_request() {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Permission denied.', 403 );
+		}
+	}
+
 	public function save_admin_page() {
-		
-		$literals = [ 'days_for_deletion', 'hours_for_cron', 'cron_timeout', 'save_timeout', 'cron_maxrows' ];
-		$bools = [ 'cron_enabled', 'enable_logging', 'disable_save_clean' ];
-		
-		$post_clean = filter_input_array( INPUT_POST, [
-			'hours_for_cron'     => FILTER_SANITIZE_NUMBER_INT,
-			'days_for_deletion'  => FILTER_SANITIZE_NUMBER_INT,
-			'cron_timeout'       => FILTER_SANITIZE_NUMBER_INT,
-			'cron_maxrows'       => FILTER_SANITIZE_NUMBER_INT,
-			'save_timeout'       => FILTER_SANITIZE_NUMBER_INT,
-			'cron_enabled'       => FILTER_VALIDATE_BOOLEAN,
-			'enable_logging'     => FILTER_VALIDATE_BOOLEAN,
-			'disable_save_clean' => FILTER_VALIDATE_BOOLEAN,
-		] );
-		
-		foreach ( $literals as $key ) {
-			if ( isset( $post_clean[ $key ] ) ) {
-				crtbr()->options()->set( $key, $post_clean[ $key ] );
+		$this->authorize_request();
+		check_ajax_referer( 'crtbr_admin', 'nonce' );
+		$values = [];
+		foreach ( [ 'days_for_deletion', 'hours_for_cron', 'cron_timeout', 'save_timeout', 'cron_maxrows' ] as $key ) {
+			if ( ! isset( $_POST[ $key ] ) ) {
+				continue;
+			}
+			$value = filter_var( wp_unslash( $_POST[ $key ] ), FILTER_VALIDATE_INT, [ 'options' => [ 'min_range' => 1 ] ] );
+			if ( false === $value ) {
+				wp_send_json_error( 'Settings must be positive whole numbers.', 400 );
+			}
+			$values[ $key ] = $value;
+		}
+		foreach ( [ 'cron_enabled', 'enable_logging', 'disable_save_clean' ] as $key ) {
+			if ( isset( $_POST[ $key ] ) ) {
+				$value = filter_var( wp_unslash( $_POST[ $key ] ), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE );
+				if ( null === $value ) {
+					wp_send_json_error( 'Invalid checkbox value.', 400 );
+				}
+				$values[ $key ] = $value;
 			}
 		}
-		
-		foreach ( $bools as $key ) {
-			if ( isset( $post_clean[ $key ] ) ) {
-				crtbr()->options()->set( $key, $post_clean[ $key ] == 'true' );
+		foreach ( $values as $key => $value ) {
+			crtbr()->options()->set( $key, $value );
+		}
+		if ( isset( $values['cron_enabled'] ) || isset( $values['hours_for_cron'] ) ) {
+			wp_clear_scheduled_hook( 'crtbr_cron_cleanup' );
+			if ( crtbr()->options()->get( 'cron_enabled' ) ) {
+				wp_schedule_single_event( time() + max( 1, (int) crtbr()->options()->get( 'hours_for_cron' ) ) * HOUR_IN_SECONDS, 'crtbr_cron_cleanup' );
 			}
 		}
-		
+		wp_send_json_success();
 	}
 
 }

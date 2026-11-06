@@ -42,7 +42,7 @@ class CRTBR_Options {
 	 */
 	public function save_defaults() {
 		foreach ( $this->defaults as $key => $value ) {
-			$this->set( $key, $value );
+			add_option( 'crtbr_' . $key, $value, '', false );
 		}
 	}
 
@@ -73,8 +73,7 @@ class CRTBR_Options {
 			return $this->lookup[$name];
 		}
 		$default = isset( $this->defaults[$name] ) ? $this->defaults[$name] : $default;
-		$value = get_option( 'crtbr_' . $name );
-		return $value ? $value : $default;
+		return get_option( 'crtbr_' . $name, $default );
 	}
 	
 	/**

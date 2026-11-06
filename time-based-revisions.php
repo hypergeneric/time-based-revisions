@@ -1,9 +1,11 @@
 <?php
 /**
- * Plugin Name:  Time-based Revisions
+ * Plugin Name:  Time-based Revision Cleanup
  * Plugin URI:   https://compiledrogue.com/
- * Description:  Maximize WordPress efficiency with Time-based Revision Cleanup: manage post histories by age, not count, with optional auto-cleanups.
- * Version:      1.1.4
+ * Description:  Keep the history. Lose the clutter. Retain WordPress revisions by age, not count, with optional scheduled cleanup.
+ * Version:      1.1.5
+ * Requires at least: 6.2
+ * Requires PHP: 7.4
  * Author:       Compiled Rogue
  * Author URI:   https://compiledrogue.com
  * License:      GPL2 or later
@@ -30,7 +32,7 @@ if ( ! class_exists( 'TimeBasedRevisions' ) ) :
 	class TimeBasedRevisions {
 		
 		/** @var string The plugin version number. */
-		var $version = '1.1.4';
+		var $version = '1.1.5';
 		
 		/** @var string Shortcuts. */
 		var $plugin;
