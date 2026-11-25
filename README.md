@@ -107,6 +107,10 @@ Your existing WordPress revisions remain in the database. Deactivation clears th
 
 ## Changelog
 
+### 1.1.7
+
+* Confirmed compatibility with WordPress 7.2 (tested with 7.2 RC3).
+
 ### 1.1.6
 * Simplified the admin screen header to use the plugin name without a logo image.
 
@@ -148,9 +152,9 @@ Your existing WordPress revisions remain in the database. Deactivation clears th
 | Field | Value |
 | --- | --- |
 | Requires WordPress | 6.2 or later |
-| Tested through | 7.1 |
+| Tested through | 7.2 |
 | Requires PHP | 7.4 or later |
-| Stable release | 1.1.6 |
+| Stable release | 1.1.7 |
 | License | [GPLv2 or later](https://www.gnu.org/licenses/gpl-2.0.html) |
 | Contributors | michaelsablone |
 | Directory tags | post revisions, revision history, revision cleanup, database cleanup, revision management |
